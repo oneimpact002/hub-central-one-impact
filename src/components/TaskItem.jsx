@@ -33,13 +33,14 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           </button>
         </span>
 
-        {/* Title + chip de vínculo */}
+        {/* Title */}
         <span
-          className="flex-shrink-0 text-[13px] cursor-pointer pr-4 flex items-center gap-2"
+          className="flex-shrink-0 text-[13px] cursor-pointer pr-4 flex items-center min-w-0"
           style={{ width: `${taskColWidth}px` }}
           onClick={() => onOpenModal(task)}
         >
           <span
+            className="truncate"
             style={{
               color: task.completed ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
               textDecoration: task.completed ? 'line-through' : 'none',
@@ -49,33 +50,6 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           >
             {task.title}
           </span>
-
-          {planTitle && (
-            <span
-              className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded flex-shrink-0"
-              style={{
-                background: 'var(--color-bg-surface)',
-                color: 'var(--color-text-muted)',
-                border: '1px solid var(--color-border)',
-                opacity: 0.85,
-              }}
-              title={milestoneTitle ? `${planTitle} → ${milestoneTitle}` : planTitle}
-            >
-              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-              </svg>
-              <span
-                style={{
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  maxWidth: '180px',
-                }}
-              >
-                {planTitle}{milestoneTitle ? ` → ${milestoneTitle}` : ''}
-              </span>
-            </span>
-          )}
         </span>
 
         {/* Properties cells */}
@@ -122,6 +96,32 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
               <span key={prop.id} className="w-[120px] flex-shrink-0 text-[12px]">
                 {val ? (
                   <span className="text-[11px] truncate" style={{ color: 'var(--color-text-secondary)' }}>{val}</span>
+                ) : <span style={{ color: 'var(--color-text-label)' }}>—</span>}
+              </span>
+            )
+          }
+          if (prop.id === 'planLink') {
+            return (
+              <span key={prop.id} className="w-[160px] flex-shrink-0 text-[12px]">
+                {planTitle ? (
+                  <span
+                    className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded"
+                    style={{
+                      background: 'var(--color-bg-surface)',
+                      color: 'var(--color-text-muted)',
+                      border: '1px solid var(--color-border)',
+                      opacity: 0.85,
+                      maxWidth: '100%',
+                    }}
+                    title={milestoneTitle ? `${planTitle} → ${milestoneTitle}` : planTitle}
+                  >
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span className="truncate">
+                      {planTitle}{milestoneTitle ? ` → ${milestoneTitle}` : ''}
+                    </span>
+                  </span>
                 ) : <span style={{ color: 'var(--color-text-label)' }}>—</span>}
               </span>
             )

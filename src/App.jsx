@@ -17,6 +17,7 @@ const properties = [
   { id: 'status', label: 'Status', visible: true },
   { id: 'responsible', label: 'Responsável', visible: true },
   { id: 'client', label: 'Cliente', visible: true },
+  { id: 'planLink', label: 'Plano / Milestone', visible: true },
   { id: 'executionDate', label: 'Data Execução', visible: true },
   { id: 'dueDate', label: 'Prazo', visible: true },
   { id: 'comment', label: 'Comentários', visible: false },
