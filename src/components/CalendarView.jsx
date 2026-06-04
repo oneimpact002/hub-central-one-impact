@@ -83,13 +83,13 @@ export default function CalendarView({ tasks, onOpenModal, onUpdateTask }) {
       {/* Calendário — 70% */}
       <div className="flex-[7] overflow-auto p-6 flex flex-col" style={{ borderRight: '1px solid var(--color-border)' }}>
         {/* Modo toggle */}
-        <div className="flex items-center gap-1 mb-4 rounded-lg p-1" style={{ background: '#272431' }}>
+        <div className="flex items-center gap-1 mb-4 rounded-lg p-1" style={{ background: 'var(--color-bg-input)' }}>
           <button
             onClick={() => setCalendarMode('dueDate')}
             className="text-[12px] font-medium px-3 py-1.5 rounded-md border-none cursor-pointer transition-colors"
             style={{
               background: calendarMode === 'dueDate' ? '#503FB6' : 'transparent',
-              color: calendarMode === 'dueDate' ? '#ffffff' : 'rgba(255,255,255,0.5)',
+              color: calendarMode === 'dueDate' ? '#ffffff' : 'var(--color-text-muted)',
             }}
           >
             Prazo
@@ -99,7 +99,7 @@ export default function CalendarView({ tasks, onOpenModal, onUpdateTask }) {
             className="text-[12px] font-medium px-3 py-1.5 rounded-md border-none cursor-pointer transition-colors"
             style={{
               background: calendarMode === 'executionDate' ? '#503FB6' : 'transparent',
-              color: calendarMode === 'executionDate' ? '#ffffff' : 'rgba(255,255,255,0.5)',
+              color: calendarMode === 'executionDate' ? '#ffffff' : 'var(--color-text-muted)',
             }}
           >
             Execução
@@ -154,8 +154,8 @@ export default function CalendarView({ tasks, onOpenModal, onUpdateTask }) {
                 <span
                   className={`text-[12px] w-[24px] h-[24px] flex items-center justify-center rounded-full mb-1 ${isToday(day) ? 'font-bold' : ''}`}
                   style={{
-                    color: isToday(day) ? '#111111' : 'var(--color-text-secondary)',
-                    background: isToday(day) ? '#cccccc' : 'transparent',
+                    color: isToday(day) ? '#ffffff' : 'var(--color-text-secondary)',
+                    background: isToday(day) ? '#503FB6' : 'transparent',
                   }}
                 >
                   {day}

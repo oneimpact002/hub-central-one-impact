@@ -103,7 +103,7 @@ aside {
   --color-bg-active: rgba(255, 255, 255, 0.15);
 }
 
-/* Calendário: barra do toggle em #272431 e textos brancos */
+/* Calendário: ajuste fino por tema (após sidebar) */
 .calendar-view {
   --color-bg-input: #272431;
   --color-bg-active: #272431;
@@ -111,4 +111,13 @@ aside {
   --color-text-secondary: #ffffff;
   --color-border: #272431;
   --color-border-input: #272431;
+}
+
+[data-theme="light"] .calendar-view {
+  --color-bg-input: #f0f0f0;
+  --color-bg-active: #503FB6;
+  --color-text-muted: #503FB6;
+  --color-text-secondary: #503FB6;
+  --color-border: #e5e5e5;
+  --color-border-input: #e5e5e5;
 }
