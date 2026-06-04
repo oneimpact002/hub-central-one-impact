@@ -840,10 +840,7 @@ export default function PlansView({
   onDeleteDocument,
 }) {
   const [filter, setFilter] = useState('all')
-  const [expanded, setExpanded] = useState(() => {
-    const firstActive = plans.find(p => p.status === 'active')
-    return firstActive ? new Set([firstActive.id]) : new Set()
-  })
+  const [expanded, setExpanded] = useState(() => new Set())
 
   const toggleExpand = (id) => {
     const next = new Set(expanded)
