@@ -557,6 +557,14 @@ function App() {
     setGoals(g => g.map(goal => goal.id === goalId ? { ...goal, milestones: goal.milestones.filter(m => m.id !== msId) } : goal))
   }
 
+  const updateGoalMilestoneInline = async (goalId, msId, title) => {
+    await supabase.from('goal_milestones').update({ title }).eq('id', msId)
+    setGoals(g => g.map(goal => goal.id === goalId ? {
+      ...goal,
+      milestones: goal.milestones.map(m => m.id === msId ? { ...m, title } : m),
+    } : goal))
+  }
+
   // ─── Render ───────────────────────────────────
   if (loading) {
     return (
@@ -583,7 +591,7 @@ function App() {
           <CalendarView tasks={tasks} onOpenModal={openModal} onUpdateTask={updateTask} />
         )}
         {activeTab === 'direcionamento' && (
-          <GoalsView directions={directions} setDirections={setDirections} goals={goals} setGoals={setGoals} plans={plans} onOpenPlanModal={openPlanModal} onDeleteDirection={deleteDirection} onToggleDir={toggleDir} onCreateDirection={createDirection} onUpdateDirection={updateDirection} onCreateGoal={createGoal} onUpdateGoal={updateGoal} onDeleteGoal={deleteGoal} onToggleGoalStatus={toggleGoalStatus} onToggleGoalMilestone={toggleGoalMilestone} onAddGoalMilestone={addGoalMilestoneInline} onRemoveGoalMilestone={removeGoalMilestoneInline} />
+          <GoalsView directions={directions} setDirections={setDirections} goals={goals} setGoals={setGoals} plans={plans} onOpenPlanModal={openPlanModal} onDeleteDirection={deleteDirection} onToggleDir={toggleDir} onCreateDirection={createDirection} onUpdateDirection={updateDirection} onCreateGoal={createGoal} onUpdateGoal={updateGoal} onDeleteGoal={deleteGoal} onToggleGoalStatus={toggleGoalStatus} onToggleGoalMilestone={toggleGoalMilestone} onAddGoalMilestone={addGoalMilestoneInline} onRemoveGoalMilestone={removeGoalMilestoneInline} onUpdateGoalMilestone={updateGoalMilestoneInline} />
         )}
       </main>
       {modalOpen && (
