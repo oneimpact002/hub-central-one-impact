@@ -196,7 +196,7 @@ function DocumentsSection({ planId, documents, onAdd, onDelete }) {
 
       <div
         className="flex items-center gap-1.5 rounded-md transition-colors"
-        style={{ background: 'var(--color-bg-surface)', border: '1px dashed var(--color-border)', padding: '4px' }}
+        style={{ background: 'var(--color-bg-surface)', border: '1px dashed var(--color-border)', padding: '6px 8px' }}
       >
         <input
           ref={titleRef}
@@ -205,8 +205,8 @@ function DocumentsSection({ planId, documents, onAdd, onDelete }) {
           onChange={(e) => setTitle(e.target.value)}
           onKeyDown={handleKey}
           placeholder="Título..."
-          className="flex-1 bg-transparent border-none outline-none text-[11px]"
-          style={{ color: 'var(--color-text-primary)', padding: '10px', minWidth: 0 }}
+          className="flex-1 border-none outline-none text-[11px]"
+          style={{ color: 'var(--color-text-primary)', padding: '8px 10px', minWidth: 0, background: 'transparent' }}
         />
         <input
           type="text"
@@ -214,8 +214,8 @@ function DocumentsSection({ planId, documents, onAdd, onDelete }) {
           onChange={(e) => setUrl(e.target.value)}
           onKeyDown={handleKey}
           placeholder="https://..."
-          className="flex-1 bg-transparent border-none outline-none text-[11px]"
-          style={{ color: 'var(--color-text-primary)', padding: '10px', minWidth: 0 }}
+          className="flex-1 border-none outline-none text-[11px]"
+          style={{ color: 'var(--color-text-primary)', padding: '8px 10px', minWidth: 0, background: 'transparent' }}
         />
         <button
           onClick={handleAdd}

@@ -311,7 +311,7 @@ export default function GoalsView({
                               </div>
 
                               {/* Progress */}
-                              <div className="rounded-lg p-3 mb-4" style={{ background: 'var(--color-bg-input)' }}>
+                              <div className="rounded-lg p-3 mb-4" style={{ background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)' }}>
                                 <div className="flex items-center justify-between mb-2">
                                   <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{g.metric || 'Progresso'}</span>
                                   <span className="text-[13px] font-bold" style={{ color: 'var(--color-text-primary)' }}>{g.currentValue} / {g.targetValue}</span>
