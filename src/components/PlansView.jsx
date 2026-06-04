@@ -16,15 +16,23 @@ const statusLabels = {
 }
 
 const taskStatusMeta = {
-  'pendente':          { label: 'Pendente',     color: '#f59e0b' },
-  'em progresso':      { label: 'Em Progresso', color: '#3b82f6' },
-  'em andamamento':    { label: 'Em Progresso', color: '#3b82f6' },
-  'em andamento':      { label: 'Em Progresso', color: '#3b82f6' },
-  'concluido':         { label: 'Concluído',    color: '#10b981' },
-  'concluído':         { label: 'Concluído',    color: '#10b981' },
-  'concluida':         { label: 'Concluído',    color: '#10b981' },
-  'bloqueada':         { label: 'Bloqueada',    color: '#ef4444' },
-  'cancelada':         { label: 'Cancelada',    color: '#6b7280' },
+  'para fazer':             { label: 'Para fazer',             color: '#94a3b8' },
+  'fazendo':                { label: 'Fazendo',                color: '#3b82f6' },
+  'feito':                  { label: 'Feito',                  color: '#10b981' },
+  'precisa de aprovação':   { label: 'Precisa de aprovação',   color: '#a855f7' },
+  'precisa de aprovacao':   { label: 'Precisa de aprovação',   color: '#a855f7' },
+  'aguardando':             { label: 'Aguardando',             color: '#f59e0b' },
+  'cancelado':              { label: 'Cancelado',              color: '#6b7280' },
+  // aliases de compatibilidade (status antigos)
+  'pendente':               { label: 'Para fazer',             color: '#94a3b8' },
+  'em progresso':           { label: 'Fazendo',                color: '#3b82f6' },
+  'em andamento':           { label: 'Fazendo',                color: '#3b82f6' },
+  'concluido':              { label: 'Feito',                  color: '#10b981' },
+  'concluído':              { label: 'Feito',                  color: '#10b981' },
+  'concluida':              { label: 'Feito',                  color: '#10b981' },
+  'concluída':              { label: 'Feito',                  color: '#10b981' },
+  'bloqueada':              { label: 'Aguardando',             color: '#f59e0b' },
+  'cancelada':              { label: 'Cancelado',              color: '#6b7280' },
 }
 
 function formatDateBR(dateStr) {

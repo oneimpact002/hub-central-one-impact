@@ -7,7 +7,7 @@ const DEFAULT_FORM = {
   client: '',
   dueDate: '',
   executionDate: '',
-  status: 'Pendente',
+  status: 'Para fazer',
   responsible: '',
   comment: '',
   planId: null,
@@ -169,9 +169,12 @@ export default function TaskModal({ task, plans = [], teamMembers = [], initialF
             <div className="flex flex-col gap-1.5">
               <span className="text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>Status</span>
               <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="w-full">
-                <option value="Pendente">Pendente</option>
-                <option value="Em Progresso">Em Progresso</option>
-                <option value="Concluído">Concluído</option>
+                <option value="Para fazer">Para fazer</option>
+                <option value="Fazendo">Fazendo</option>
+                <option value="Feito">Feito</option>
+                <option value="Precisa de aprovação">Precisa de aprovação</option>
+                <option value="Aguardando">Aguardando</option>
+                <option value="Cancelado">Cancelado</option>
               </select>
             </div>
           </div>

@@ -37,7 +37,7 @@ const mapTask = t => ({
   client: t.client || '',
   dueDate: t.due_date || '',
   executionDate: t.execution_date || '',
-  status: t.status || 'Pendente',
+  status: t.status || 'Para fazer',
   responsible: t.responsible || '',
   comment: t.comment || '',
   tags: t.tags || [],
