@@ -882,24 +882,27 @@ export default function PlansView({
 
       {/* Filtro */}
       <div className="flex items-center gap-1.5 px-8 py-3" style={{ borderBottom: '1px solid var(--color-border)' }}>
-        {statusOptions.map(opt => (
-          <button
-            key={opt.id}
-            onClick={() => setFilter(opt.id)}
-            className="text-[12px] font-medium cursor-pointer rounded-md px-3 py-1.5 border-none transition-colors"
-            style={{
-              background: filter === opt.id ? 'var(--color-bg-active)' : 'transparent',
-              color: filter === opt.id ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
-            }}
-          >
-            {opt.label}
-            {counts[opt.id] > 0 && (
-              <span className="ml-1.5 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-                {counts[opt.id]}
-              </span>
-            )}
-          </button>
-        ))}
+        {statusOptions.map(opt => {
+          const isActive = filter === opt.id
+          return (
+            <button
+              key={opt.id}
+              onClick={() => setFilter(opt.id)}
+              className="text-[12px] font-medium cursor-pointer rounded-md px-3 py-1.5 border-none transition-colors"
+              style={{
+                background: isActive ? '#503FB6' : 'transparent',
+                color: isActive ? '#ffffff' : 'var(--color-text-secondary)',
+              }}
+            >
+              {opt.label}
+              {counts[opt.id] > 0 && (
+                <span className="ml-1.5 text-[10px]" style={{ color: isActive ? 'rgba(255,255,255,0.7)' : 'var(--color-text-muted)' }}>
+                  {counts[opt.id]}
+                </span>
+              )}
+            </button>
+          )
+        })}
       </div>
 
       {/* Content */}
