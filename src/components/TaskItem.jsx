@@ -59,7 +59,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           const val = task[prop.id]
           if (prop.id === 'responsible') {
             return (
-              <span key={prop.id} className="flex-shrink-0 text-[12px]" style={{ width: `${w(prop.id)}px` }}>
+              <span key={prop.id} className="flex-shrink-0 text-[12px] pr-6" style={{ width: `${w(prop.id)}px` }}>
                 {val ? (
                   <span className="inline-flex items-center gap-1 text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>
                     <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-semibold flex-shrink-0"
@@ -75,7 +75,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           if (prop.id === 'priority') {
             const labels = { hoje: 'Hoje', 'essa-semana': 'Esta semana', 'proxima-semana': 'Próxima semana', 'qualquer-momento': 'Qualquer' }
             return (
-              <span key={prop.id} className="flex-shrink-0 text-[12px]" style={{ width: `${w(prop.id)}px` }}>
+              <span key={prop.id} className="flex-shrink-0 text-[12px] pr-6" style={{ width: `${w(prop.id)}px` }}>
                 {val ? (
                   <span className="text-[11px] px-2 py-0.5 rounded font-medium" style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-secondary)' }}>
                     {labels[val] || val}
@@ -86,7 +86,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           }
           if (prop.id === 'dueDate' || prop.id === 'executionDate') {
             return (
-              <span key={prop.id} className="flex-shrink-0 text-[12px]" style={{ width: `${w(prop.id)}px` }}>
+              <span key={prop.id} className="flex-shrink-0 text-[12px] pr-6" style={{ width: `${w(prop.id)}px` }}>
                 {val ? (
                   <span style={{ color: 'var(--color-text-secondary)' }}>{val.split('-').reverse().slice(0, 2).join('/')}</span>
                 ) : <span style={{ color: 'var(--color-text-label)' }}>—</span>}
@@ -98,7 +98,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           }
           if (prop.id === 'planLink') {
             return (
-              <span key={prop.id} className="flex-shrink-0 text-[12px] overflow-hidden" style={{ width: `${w(prop.id)}px` }}>
+              <span key={prop.id} className="flex-shrink-0 text-[12px] pr-6" style={{ width: `${w(prop.id)}px` }}>
                 {planTitle ? (
                   <span
                     className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded"
@@ -108,6 +108,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
                       border: '1px solid var(--color-border)',
                       opacity: 0.85,
                       maxWidth: '100%',
+                      overflow: 'hidden',
                     }}
                     title={milestoneTitle ? `${planTitle} → ${milestoneTitle}` : planTitle}
                   >
@@ -134,7 +135,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
             }
             const meta = val ? statusMeta[val.toLowerCase()] : null
             return (
-              <span key={prop.id} className="flex-shrink-0 text-[12px]" style={{ width: `${w(prop.id)}px` }}>
+              <span key={prop.id} className="flex-shrink-0 text-[12px] pr-6" style={{ width: `${w(prop.id)}px` }}>
                 {meta ? (
                   <span
                     className="text-[10px] px-1.5 py-0.5 rounded font-semibold"
@@ -148,7 +149,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           }
           if (prop.id === 'comment') {
             return (
-              <span key={prop.id} className="flex-shrink-0 text-[12px]" style={{ width: `${w(prop.id)}px` }}>
+              <span key={prop.id} className="flex-shrink-0 text-[12px] pr-6" style={{ width: `${w(prop.id)}px` }}>
                 {val ? (
                   <span className="text-[11px] truncate block" style={{ color: 'var(--color-text-secondary)' }} title={val}>{val}</span>
                 ) : <span style={{ color: 'var(--color-text-label)' }}>—</span>}
