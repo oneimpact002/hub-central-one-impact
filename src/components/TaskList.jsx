@@ -423,7 +423,7 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                     <div className="flex items-center px-4 py-2.5" style={{ background: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border)' }}>
                       <span className="w-[40px] flex-shrink-0"></span>
                       <span
-                        className="flex-shrink-0 text-[10px] font-semibold tracking-wider pr-4 relative"
+                        className="flex-shrink-0 text-[10px] font-semibold tracking-wider pr-6 relative"
                         style={{ color: 'var(--color-text-muted)', width: `${taskColWidth}px` }}
                       >
                         TAREFA
@@ -439,7 +439,7 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                         return (
                           <span
                             key={prop.id}
-                            className="flex-shrink-0 text-[10px] font-semibold tracking-wider pr-4 relative"
+                            className="flex-shrink-0 text-[10px] font-semibold tracking-wider pr-6 relative"
                             style={{ color: 'var(--color-text-muted)', width: `${w}px` }}
                           >
                             {prop.label.toUpperCase()}
@@ -490,7 +490,7 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                 >
                   <span className="w-[40px] flex-shrink-0"></span>
                   <span
-                    className="flex-shrink-0 text-[11px] font-semibold tracking-wider pr-4 relative"
+                    className="flex-shrink-0 text-[11px] font-semibold tracking-wider pr-6 relative"
                     style={{ color: 'var(--color-text-primary)', width: `${taskColWidth}px` }}
                   >
                     TAREFA
@@ -506,7 +506,7 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                     return (
                       <span
                         key={prop.id}
-                        className="flex-shrink-0 text-[11px] font-semibold tracking-wider pr-4 relative"
+                        className="flex-shrink-0 text-[11px] font-semibold tracking-wider pr-6 relative"
                         style={{ color: 'var(--color-text-primary)', width: `${w}px` }}
                       >
                         {prop.label.toUpperCase()}

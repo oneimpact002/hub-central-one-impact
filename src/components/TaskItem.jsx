@@ -37,7 +37,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
 
         {/* Title */}
         <span
-          className="flex-shrink-0 text-[13px] cursor-pointer pr-4 flex items-center min-w-0"
+          className="flex-shrink-0 text-[13px] cursor-pointer pr-6 flex items-center min-w-0"
           style={{ width: `${taskColWidth}px` }}
           onClick={() => onOpenModal(task)}
         >
@@ -94,17 +94,11 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
             )
           }
           if (prop.id === 'client') {
-            return (
-              <span key={prop.id} className="flex-shrink-0 text-[12px]" style={{ width: `${w(prop.id)}px` }}>
-                {val ? (
-                  <span className="text-[11px] truncate" style={{ color: 'var(--color-text-secondary)' }}>{val}</span>
-                ) : <span style={{ color: 'var(--color-text-label)' }}>—</span>}
-              </span>
-            )
+            return null
           }
           if (prop.id === 'planLink') {
             return (
-              <span key={prop.id} className="flex-shrink-0 text-[12px]" style={{ width: `${w(prop.id)}px` }}>
+              <span key={prop.id} className="flex-shrink-0 text-[12px] overflow-hidden" style={{ width: `${w(prop.id)}px` }}>
                 {planTitle ? (
                   <span
                     className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded"
@@ -120,7 +114,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
                     <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                       <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
                     </svg>
-                    <span className="truncate">
+                    <span className="truncate" style={{ minWidth: 0 }}>
                       {planTitle}{milestoneTitle ? ` → ${milestoneTitle}` : ''}
                     </span>
                   </span>
