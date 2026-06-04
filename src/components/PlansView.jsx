@@ -15,6 +15,16 @@ const statusLabels = {
   archived: 'Arquivado',
 }
 
+const taskStatusMeta = {
+  'pendente':          { label: 'Pendente',          color: '#f59e0b' },
+  'em andamento':      { label: 'Em Andamento',      color: '#3b82f6' },
+  'em-andamento':      { label: 'Em Andamento',      color: '#3b82f6' },
+  'concluida':         { label: 'Concluída',         color: '#10b981' },
+  'concluída':         { label: 'Concluída',         color: '#10b981' },
+  'bloqueada':         { label: 'Bloqueada',         color: '#ef4444' },
+  'cancelada':         { label: 'Cancelada',         color: '#6b7280' },
+}
+
 function formatDateBR(dateStr) {
   if (!dateStr) return '—'
   const [y, m, d] = dateStr.split('-')
@@ -292,6 +302,21 @@ function MilestoneTaskItem({ task, index, total, onToggle, onReorderTasks, onDel
                 </span>
               </span>
             )}
+            {task.status && (() => {
+              const meta = taskStatusMeta[task.status.toLowerCase()]
+              if (!meta) return null
+              return (
+                <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+                  <span style={{ fontWeight: 600 }}>Status:</span>
+                  <span
+                    className="px-1.5 py-0.5 rounded"
+                    style={{ background: `${meta.color}22`, color: meta.color, fontWeight: 600 }}
+                  >
+                    {meta.label}
+                  </span>
+                </span>
+              )
+            })()}
           </div>
         </div>
 
@@ -468,6 +493,21 @@ function MilestoneTaskItem({ task, index, total, onToggle, onReorderTasks, onDel
                 </span>
               </span>
             )}
+            {task.status && (() => {
+              const meta = taskStatusMeta[task.status.toLowerCase()]
+              if (!meta) return null
+              return (
+                <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+                  <span style={{ fontWeight: 600 }}>Status:</span>
+                  <span
+                    className="px-1.5 py-0.5 rounded"
+                    style={{ background: `${meta.color}22`, color: meta.color, fontWeight: 600 }}
+                  >
+                    {meta.label}
+                  </span>
+                </span>
+              )
+            })()}
           </div>
         </div>
 
