@@ -196,7 +196,7 @@ function DocumentsSection({ planId, documents, onAdd, onDelete }) {
 
       <div
         className="flex items-center gap-1.5 rounded-md transition-colors"
-        style={{ background: 'var(--color-bg-input)', padding: '10px' }}
+        style={{ background: 'var(--color-bg-surface)', border: '1px dashed var(--color-border)', padding: '4px' }}
       >
         <input
           ref={titleRef}
