@@ -11,7 +11,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
       onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-task-row-hover)'}
       onMouseLeave={(e) => e.currentTarget.style.background = 'var(--color-task-row)'}
     >
-      <div className="flex items-center px-4 py-3 min-w-[900px]">
+      <div className="flex items-center px-4 py-3">
         {/* Checkbox */}
         <span className="w-[40px] flex-shrink-0 flex items-center justify-center">
           <button
@@ -32,7 +32,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
 
         {/* Title + chip de vínculo */}
         <span
-          className="flex-[2] min-w-[200px] text-[13px] cursor-pointer truncate pr-4 flex items-center gap-2 min-w-0"
+          className="w-[420px] flex-shrink-0 text-[13px] cursor-pointer truncate pr-4 flex items-center gap-2 min-w-0"
           onClick={() => onOpenModal(task)}
         >
           <span
