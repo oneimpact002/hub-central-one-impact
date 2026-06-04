@@ -310,7 +310,7 @@ export default function GoalsView({
                             {/* Milestones */}
                             <div className="px-5 py-4" style={{ background: 'var(--color-bg-main)', borderTop: '1px solid var(--color-border)' }}>
                               <div className="flex items-center justify-between mb-3">
-                                <span className="text-[12px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>Milestones Trimestrais</span>
+                                <span className="text-[12px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>Milestones</span>
                                 <span className="text-[11px] font-semibold" style={{ color: direction.color }}>{msDone}/{msTotal}</span>
                               </div>
                               <div className="h-[4px] rounded-full overflow-hidden mb-4" style={{ background: 'var(--color-border)' }}>
