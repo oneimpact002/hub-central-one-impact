@@ -339,11 +339,30 @@ function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpen
     if (e.key === 'Escape') cancelEdit(e)
   }
 
+  const taskProgress = milestoneTasks.length > 0 ? (doneTasks.length / milestoneTasks.length) * 100 : 0
+
   return (
     <div
-      className="rounded-lg"
+      className="rounded-lg relative overflow-hidden"
       style={{ background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)' }}
     >
+      {/* Barra de progresso vertical sutil na lateral direita */}
+      <div
+        className="absolute top-0 right-0 bottom-0"
+        style={{
+          width: '3px',
+          background: 'var(--color-border)',
+        }}
+      >
+        <div
+          className="absolute bottom-0 left-0 right-0 transition-all"
+          style={{
+            height: `${taskProgress}%`,
+            background: taskProgress === 100 ? '#10b981' : '#503FB6',
+            opacity: 0.7,
+          }}
+        />
+      </div>
       {/* Milestone header */}
       <div
         className="group/ms flex items-center gap-2.5 px-3 py-2.5 cursor-pointer"
@@ -428,11 +447,11 @@ function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpen
             style={{
               color: overdue ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
               fontWeight: overdue ? 600 : 400,
-              minWidth: '45px',
+              minWidth: '70px',
               textAlign: 'right',
             }}
           >
-            {milestone.dueDate ? formatDateBR(milestone.dueDate) : ''}
+            {milestone.dueDate ? `Prazo: ${formatDateBR(milestone.dueDate)}` : ''}
           </span>
         )}
 
