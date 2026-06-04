@@ -308,7 +308,7 @@ function MilestoneTaskItem({ task, onToggle, onDelete, onOpen }) {
   )
 }
 
-function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpenTask, onAddTask, onDeleteMilestone, onUpdateMilestone, onToggleMilestone }) {
+function MilestoneSection({ planId, milestone, index, total, tasks, onToggle, onDelete, onOpenTask, onAddTask, onDeleteMilestone, onUpdateMilestone, onToggleMilestone, onMoveUp, onMoveDown, isDragging, isDragOver, onDragStart, onDragOver, onDragLeave, onDrop, onDragEnd }) {
   const [expanded, setExpanded] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(milestone.title)
@@ -343,18 +343,61 @@ function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpen
 
   return (
     <div
-      className="rounded-lg"
-      style={{ background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)' }}
+      className="rounded-lg flex transition-all"
+      style={{
+        background: 'var(--color-bg-surface)',
+        border: '1px solid var(--color-border)',
+        opacity: isDragging ? 0.4 : 1,
+        outline: isDragOver ? '2px solid #503FB6' : 'none',
+        outlineOffset: '-2px',
+      }}
+      draggable
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      onDragEnd={onDragEnd}
     >
-      {/* Milestone header */}
+      {/* Coluna esquerda: número + setas */}
       <div
-        className="group/ms flex items-center gap-2.5 px-3 py-2.5 cursor-pointer"
-        style={{ borderBottom: expanded ? '1px solid var(--color-border)' : 'none' }}
-        onClick={() => setExpanded(!expanded)}
+        className="flex flex-col items-center justify-center gap-1 px-2 flex-shrink-0 cursor-grab active:cursor-grabbing"
+        style={{ borderRight: '1px solid var(--color-border)', minWidth: '32px' }}
+        title="Arraste para reordenar"
       >
-        <span className="text-[11px] flex-shrink-0 w-[12px] text-center" style={{ color: 'var(--color-text-muted)' }}>
-          {expanded ? '▾' : '▸'}
+        <button
+          onClick={(e) => { e.stopPropagation(); onMoveUp() }}
+          disabled={index === 0}
+          className="border-none cursor-pointer p-0.5 rounded disabled:opacity-20 disabled:cursor-not-allowed"
+          style={{ background: 'transparent', color: 'var(--color-text-muted)' }}
+          title="Mover para cima"
+        >
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+        <span className="text-[10px] font-semibold tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
+          {String(index + 1).padStart(2, '0')}
         </span>
+        <button
+          onClick={(e) => { e.stopPropagation(); onMoveDown() }}
+          disabled={index === total - 1}
+          className="border-none cursor-pointer p-0.5 rounded disabled:opacity-20 disabled:cursor-not-allowed"
+          style={{ background: 'transparent', color: 'var(--color-text-muted)' }}
+          title="Mover para baixo"
+        >
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+
+      {/* Conteúdo do card */}
+      <div className="flex-1 min-w-0">
+        {/* Milestone header */}
+        <div
+          className="group/ms flex items-center gap-2.5 px-3 py-2.5 cursor-pointer"
+          style={{ borderBottom: expanded ? '1px solid var(--color-border)' : 'none' }}
+          onClick={() => setExpanded(!expanded)}
+        >
+          <span className="text-[11px] flex-shrink-0 w-[12px] text-center" style={{ color: 'var(--color-text-muted)' }}>
+            {expanded ? '▾' : '▸'}
+          </span>
 
         <button
           onClick={(e) => { e.stopPropagation(); onToggleMilestone(milestone.id) }}
@@ -527,11 +570,53 @@ function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpen
         </button>
       </div>
       )}
+      </div>
     </div>
   )
 }
 
-function PlanCard({ plan, tasks, isExpanded, onToggleExpand, onOpenModal, onDelete, onToggleMilestone, onUpdateMilestone, onDeleteMilestone, onAddTaskToMilestone, onToggleTask, onDeleteTask, onOpenTaskModal, onAddDocument, onDeleteDocument }) {
+function PlanCard({ plan, tasks, isExpanded, onToggleExpand, onOpenModal, onDelete, onToggleMilestone, onUpdateMilestone, onReorderMilestones, onDeleteMilestone, onAddTaskToMilestone, onToggleTask, onDeleteTask, onOpenTaskModal, onAddDocument, onDeleteDocument }) {
+  const [draggedMsId, setDraggedMsId] = useState(null)
+  const [dragOverMsId, setDragOverMsId] = useState(null)
+
+  const handleMsDragStart = (e, msId) => {
+    setDraggedMsId(msId)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+  const handleMsDragOver = (e, msId) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (draggedMsId && draggedMsId !== msId) setDragOverMsId(msId)
+  }
+  const handleMsDragLeave = () => setDragOverMsId(null)
+  const handleMsDrop = (e, targetMsId) => {
+    e.preventDefault()
+    setDragOverMsId(null)
+    if (!draggedMsId || draggedMsId === targetMsId) { setDraggedMsId(null); return }
+    const ids = plan.milestones.map(m => m.id)
+    const fromIdx = ids.indexOf(draggedMsId)
+    const toIdx = ids.indexOf(targetMsId)
+    if (fromIdx < 0 || toIdx < 0) { setDraggedMsId(null); return }
+    const next = [...ids]
+    next.splice(fromIdx, 1)
+    next.splice(toIdx, 0, draggedMsId)
+    onReorderMilestones(plan.id, next)
+    setDraggedMsId(null)
+  }
+  const handleMsDragEnd = () => {
+    setDraggedMsId(null)
+    setDragOverMsId(null)
+  }
+
+  const moveMs = (msId, dir) => {
+    const ids = plan.milestones.map(m => m.id)
+    const idx = ids.indexOf(msId)
+    const targetIdx = idx + dir
+    if (targetIdx < 0 || targetIdx >= ids.length) return
+    const next = [...ids]
+    ;[next[idx], next[targetIdx]] = [next[targetIdx], next[idx]]
+    onReorderMilestones(plan.id, next)
+  }
   const doneMilestones = plan.milestones.filter(m => m.done).length
   const totalMilestones = plan.milestones.length
   const planTasks = tasks.filter(t => t.planId === plan.id)
@@ -699,11 +784,13 @@ function PlanCard({ plan, tasks, isExpanded, onToggleExpand, onOpenModal, onDele
 
             {plan.milestones.length > 0 ? (
               <div className="flex flex-col gap-2.5 relative pl-4" style={{ borderLeft: '3px solid #503FB6' }}>
-                {plan.milestones.map(m => (
+                {plan.milestones.map((m, idx) => (
                   <MilestoneSection
                     key={m.id}
                     planId={plan.id}
                     milestone={m}
+                    index={idx}
+                    total={plan.milestones.length}
                     tasks={tasks}
                     onToggle={onToggleTask}
                     onDelete={onDeleteTask}
@@ -712,6 +799,15 @@ function PlanCard({ plan, tasks, isExpanded, onToggleExpand, onOpenModal, onDele
                     onDeleteMilestone={onDeleteMilestone}
                     onUpdateMilestone={(msId, fields) => onUpdateMilestone(plan.id, msId, fields)}
                     onToggleMilestone={(msId) => onToggleMilestone(plan.id, msId)}
+                    onMoveUp={() => moveMs(m.id, -1)}
+                    onMoveDown={() => moveMs(m.id, 1)}
+                    isDragging={draggedMsId === m.id}
+                    isDragOver={dragOverMsId === m.id}
+                    onDragStart={(e) => handleMsDragStart(e, m.id)}
+                    onDragOver={(e) => handleMsDragOver(e, m.id)}
+                    onDragLeave={handleMsDragLeave}
+                    onDrop={(e) => handleMsDrop(e, m.id)}
+                    onDragEnd={handleMsDragEnd}
                   />
                 ))}
               </div>
@@ -734,6 +830,7 @@ export default function PlansView({
   onDelete,
   onToggleMilestone,
   onUpdateMilestone,
+  onReorderMilestones,
   onDeleteMilestone,
   onAddTaskToMilestone,
   onToggleTask,
@@ -832,6 +929,7 @@ export default function PlansView({
                 onDelete={() => onDelete(plan.id)}
                 onToggleMilestone={onToggleMilestone}
                 onUpdateMilestone={onUpdateMilestone}
+                onReorderMilestones={onReorderMilestones}
                 onDeleteMilestone={onDeleteMilestone}
                 onAddTaskToMilestone={onAddTaskToMilestone}
                 onToggleTask={onToggleTask}

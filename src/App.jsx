@@ -178,7 +178,7 @@ function App() {
 
       ;(msRes.data || []).forEach(m => {
         if (!milestonesMap[m.plan_id]) milestonesMap[m.plan_id] = []
-        milestonesMap[m.plan_id].push({ id: m.id, title: m.title, dueDate: m.due_date || '', done: m.done || false })
+        milestonesMap[m.plan_id].push({ id: m.id, title: m.title, dueDate: m.due_date || '', done: m.done || false, position: m.position ?? 0 })
       })
       ;(docsRes.data || []).forEach(d => {
         if (!documentsMap[d.plan_id]) documentsMap[d.plan_id] = []
@@ -194,7 +194,7 @@ function App() {
         status: p.status || 'active',
         createdAt: p.created_at || '',
         documents: documentsMap[p.id] || [],
-        milestones: milestonesMap[p.id] || [],
+        milestones: (milestonesMap[p.id] || []).sort((a, b) => (a.position || 0) - (b.position || 0)),
       })))
     }
 
@@ -430,6 +430,19 @@ function App() {
     } : p))
   }
 
+  const reorderMilestones = async (planId, orderedIds) => {
+    const updates = orderedIds.map((id, idx) =>
+      supabase.from('plan_milestones').update({ position: idx }).eq('id', id)
+    )
+    await Promise.all(updates)
+    setPlans(plans.map(p => p.id === planId ? {
+      ...p,
+      milestones: p.milestones
+        .map(m => ({ ...m, position: orderedIds.indexOf(m.id) }))
+        .sort((a, b) => a.position - b.position),
+    } : p))
+  }
+
   const addDocument = async (planId, title, url) => {
     const { data } = await supabase.from('plan_documents').insert({ plan_id: planId, title, url }).select().single()
     if (data) {
@@ -596,7 +609,7 @@ function App() {
           <TaskList tasks={tasks} properties={properties} plans={plans} teamMembers={TEAM_MEMBERS} onToggle={toggleTask} onDelete={deleteTask} onOpenModal={openModal} />
         )}
         {activeTab === 'planos' && (
-          <PlansView plans={plans} tasks={tasks} onOpenModal={openPlanModal} onDelete={deletePlan} onToggleMilestone={toggleMilestone} onUpdateMilestone={updateMilestone} onDeleteMilestone={deleteMilestone} onToggleTask={toggleTask} onDeleteTask={deleteTask} onOpenTaskModal={openModal} onAddTaskToMilestone={openTaskModalForMilestone} onAddDocument={addDocument} onDeleteDocument={deleteDocument} />
+          <PlansView plans={plans} tasks={tasks} onOpenModal={openPlanModal} onDelete={deletePlan} onToggleMilestone={toggleMilestone} onUpdateMilestone={updateMilestone} onReorderMilestones={reorderMilestones} onDeleteMilestone={deleteMilestone} onToggleTask={toggleTask} onDeleteTask={deleteTask} onOpenTaskModal={openModal} onAddTaskToMilestone={openTaskModalForMilestone} onAddDocument={addDocument} onDeleteDocument={deleteDocument} />
         )}
         {activeTab === 'calendario' && (
           <CalendarView tasks={tasks} onOpenModal={openModal} onUpdateTask={updateTask} />
