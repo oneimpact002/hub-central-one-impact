@@ -51,9 +51,10 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
             <span
               className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded flex-shrink-0"
               style={{
-                background: 'var(--color-bg-input)',
+                background: 'var(--color-bg-surface)',
                 color: 'var(--color-text-muted)',
                 border: '1px solid var(--color-border)',
+                opacity: 0.85,
               }}
               title={milestoneTitle ? `${planTitle} → ${milestoneTitle}` : planTitle}
             >
