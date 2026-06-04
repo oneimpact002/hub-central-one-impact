@@ -32,16 +32,15 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
 
         {/* Title + chip de vínculo */}
         <span
-          className="w-[420px] flex-shrink-0 text-[13px] cursor-pointer truncate pr-4 flex items-center gap-2 min-w-0"
+          className="w-[480px] flex-shrink-0 text-[13px] cursor-pointer pr-4 flex items-center gap-2 min-w-0"
           onClick={() => onOpenModal(task)}
         >
           <span
             style={{
               color: task.completed ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
               textDecoration: task.completed ? 'line-through' : 'none',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
+              flex: 1,
+              minWidth: 0,
             }}
           >
             {task.title}
@@ -61,7 +60,14 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
               <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                 <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
               </svg>
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '180px' }}>
+              <span
+                style={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  maxWidth: '180px',
+                }}
+              >
                 {planTitle}{milestoneTitle ? ` → ${milestoneTitle}` : ''}
               </span>
             </span>
@@ -73,7 +79,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           const val = task[prop.id]
           if (prop.id === 'responsible') {
             return (
-              <span key={prop.id} className="flex-1 min-w-[140px] text-[12px]">
+              <span key={prop.id} className="w-[120px] flex-shrink-0 text-[12px]">
                 {val ? (
                   <span className="inline-flex items-center gap-1 text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>
                     <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-semibold flex-shrink-0"
@@ -89,7 +95,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           if (prop.id === 'priority') {
             const labels = { hoje: 'Hoje', 'essa-semana': 'Esta semana', 'proxima-semana': 'Próxima semana', 'qualquer-momento': 'Qualquer' }
             return (
-              <span key={prop.id} className="flex-1 min-w-[140px] text-[12px]">
+              <span key={prop.id} className="w-[120px] flex-shrink-0 text-[12px]">
                 {val ? (
                   <span className="text-[11px] px-2 py-0.5 rounded font-medium" style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-secondary)' }}>
                     {labels[val] || val}
@@ -100,7 +106,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           }
           if (prop.id === 'dueDate' || prop.id === 'executionDate') {
             return (
-              <span key={prop.id} className="flex-1 min-w-[140px] text-[12px]">
+              <span key={prop.id} className="w-[120px] flex-shrink-0 text-[12px]">
                 {val ? (
                   <span style={{ color: 'var(--color-text-secondary)' }}>{val.split('-').reverse().slice(0, 2).join('/')}</span>
                 ) : <span style={{ color: 'var(--color-text-label)' }}>—</span>}

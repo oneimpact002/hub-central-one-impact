@@ -408,9 +408,9 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                   style={{ background: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border)' }}
                 >
                   <span className="w-[40px] flex-shrink-0"></span>
-                  <span className="w-[420px] flex-shrink-0 text-[11px] font-semibold tracking-wider pr-4" style={{ color: 'var(--color-text-primary)' }}>TAREFA</span>
+                  <span className="w-[480px] flex-shrink-0 text-[11px] font-semibold tracking-wider pr-4" style={{ color: 'var(--color-text-primary)' }}>TAREFA</span>
                   {orderedVisibleProperties.map(prop => (
-                    <span key={prop.id} className="w-[140px] flex-shrink-0 text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>{prop.label.toUpperCase()}</span>
+                    <span key={prop.id} className="w-[120px] flex-shrink-0 text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>{prop.label.toUpperCase()}</span>
                   ))}
                   <span className="w-[50px] flex-shrink-0"></span>
                 </div>
