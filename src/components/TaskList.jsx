@@ -364,15 +364,15 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
 
                 {/* Table */}
                 <div className="rounded-xl overflow-x-auto" style={{ border: '1px solid var(--color-border)' }}>
-                  <div className="flex items-center px-4 py-2.5" style={{ background: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border)', width: 'max-content', minWidth: '100%' }}>
-                    <span className="w-[40px] flex-shrink-0"></span>
-                    <span className="w-[420px] flex-shrink-0 text-[10px] font-semibold tracking-wider pr-4" style={{ color: 'var(--color-text-muted)' }}>TAREFA</span>
-                    {orderedVisibleProperties.map(prop => (
-                      <span key={prop.id} className="w-[140px] flex-shrink-0 text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{prop.label.toUpperCase()}</span>
-                    ))}
-                    <span className="w-[50px] flex-shrink-0"></span>
-                  </div>
                   <div style={{ width: 'max-content', minWidth: '100%' }}>
+                    <div className="flex items-center px-4 py-2.5" style={{ background: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border)' }}>
+                      <span className="w-[40px] flex-shrink-0"></span>
+                      <span className="w-[420px] flex-shrink-0 text-[10px] font-semibold tracking-wider pr-4" style={{ color: 'var(--color-text-muted)' }}>TAREFA</span>
+                      {orderedVisibleProperties.map(prop => (
+                        <span key={prop.id} className="w-[140px] flex-shrink-0 text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{prop.label.toUpperCase()}</span>
+                      ))}
+                      <span className="w-[50px] flex-shrink-0"></span>
+                    </div>
                     {taskList.map((task, i) => {
                       const { planTitle, milestoneTitle } = resolveContext(task)
                       return (
@@ -401,22 +401,20 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
         ) : (
           /* ═══ VIEW PADRÃO (TABELA) ═══ */
           <>
-            <div className="rounded-t-xl overflow-x-auto" style={{ borderTop: '1px solid var(--color-border)', borderLeft: '1px solid var(--color-border)', borderRight: '1px solid var(--color-border)' }}>
-              <div
-                className="flex items-center px-4 py-3"
-                style={{ background: 'var(--color-bg-surface)', width: 'max-content', minWidth: '100%' }}
-              >
-                <span className="w-[40px] flex-shrink-0"></span>
-                <span className="w-[420px] flex-shrink-0 text-[11px] font-semibold tracking-wider pr-4" style={{ color: 'var(--color-text-primary)' }}>TAREFA</span>
-                {orderedVisibleProperties.map(prop => (
-                  <span key={prop.id} className="w-[140px] flex-shrink-0 text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>{prop.label.toUpperCase()}</span>
-                ))}
-                <span className="w-[50px] flex-shrink-0"></span>
-              </div>
-            </div>
-
-            <div className="rounded-b-xl overflow-x-auto" style={{ border: '1px solid var(--color-border)', borderTop: 'none' }}>
+            <div className="rounded-xl overflow-x-auto" style={{ border: '1px solid var(--color-border)' }}>
               <div style={{ width: 'max-content', minWidth: '100%' }}>
+                <div
+                  className="flex items-center px-4 py-3"
+                  style={{ background: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border)' }}
+                >
+                  <span className="w-[40px] flex-shrink-0"></span>
+                  <span className="w-[420px] flex-shrink-0 text-[11px] font-semibold tracking-wider pr-4" style={{ color: 'var(--color-text-primary)' }}>TAREFA</span>
+                  {orderedVisibleProperties.map(prop => (
+                    <span key={prop.id} className="w-[140px] flex-shrink-0 text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>{prop.label.toUpperCase()}</span>
+                  ))}
+                  <span className="w-[50px] flex-shrink-0"></span>
+                </div>
+
                 {pending.map((task, i) => {
                   const { planTitle, milestoneTitle } = resolveContext(task)
                   return (
