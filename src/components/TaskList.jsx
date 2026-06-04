@@ -364,15 +364,15 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
 
                 {/* Table */}
                 <div className="rounded-xl overflow-x-auto" style={{ border: '1px solid var(--color-border)' }}>
-                  <div className="flex items-center px-4 py-2.5 min-w-max" style={{ background: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border)' }}>
+                  <div className="flex items-center px-4 py-2.5 min-w-[900px]" style={{ background: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border)' }}>
                     <span className="w-[40px] flex-shrink-0"></span>
-                    <span className="w-[260px] flex-shrink-0 text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>TAREFA</span>
+                    <span className="flex-[2] min-w-[200px] text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>TAREFA</span>
                     {orderedVisibleProperties.map(prop => (
-                      <span key={prop.id} className="w-[140px] flex-shrink-0 text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{prop.label.toUpperCase()}</span>
+                      <span key={prop.id} className="flex-1 min-w-[140px] text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{prop.label.toUpperCase()}</span>
                     ))}
                     <span className="w-[50px] flex-shrink-0"></span>
                   </div>
-                  <div className="min-w-max">
+                  <div className="min-w-[900px]">
                     {taskList.map((task, i) => {
                       const { planTitle, milestoneTitle } = resolveContext(task)
                       return (
@@ -403,20 +403,20 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
           <>
             <div className="rounded-t-xl overflow-x-auto" style={{ borderTop: '1px solid var(--color-border)', borderLeft: '1px solid var(--color-border)', borderRight: '1px solid var(--color-border)' }}>
               <div
-                className="flex items-center px-4 py-3 min-w-max"
+                className="flex items-center px-4 py-3 min-w-[900px]"
                 style={{ background: 'var(--color-bg-surface)' }}
               >
                 <span className="w-[40px] flex-shrink-0"></span>
-                <span className="w-[260px] flex-shrink-0 text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>TAREFA</span>
+                <span className="flex-[2] min-w-[200px] text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>TAREFA</span>
                 {orderedVisibleProperties.map(prop => (
-                  <span key={prop.id} className="w-[140px] flex-shrink-0 text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>{prop.label.toUpperCase()}</span>
+                  <span key={prop.id} className="flex-1 min-w-[140px] text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>{prop.label.toUpperCase()}</span>
                 ))}
                 <span className="w-[50px] flex-shrink-0"></span>
               </div>
             </div>
 
             <div className="rounded-b-xl overflow-x-auto" style={{ border: '1px solid var(--color-border)', borderTop: 'none' }}>
-              <div className="min-w-max">
+              <div className="min-w-[900px]">
                 {pending.map((task, i) => {
                   const { planTitle, milestoneTitle } = resolveContext(task)
                   return (
@@ -459,7 +459,7 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                 className="rounded-xl overflow-x-auto mt-3"
                 style={{ border: '1px solid var(--color-border)', opacity: 0.6 }}
               >
-                <div className="min-w-max">
+                <div className="min-w-[900px]">
                   {completed.map((task, i) => {
                     const { planTitle, milestoneTitle } = resolveContext(task)
                     return (

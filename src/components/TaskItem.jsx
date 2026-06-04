@@ -11,7 +11,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
       onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-task-row-hover)'}
       onMouseLeave={(e) => e.currentTarget.style.background = 'var(--color-task-row)'}
     >
-      <div className="flex items-center px-4 py-3 min-w-max">
+      <div className="flex items-center px-4 py-3 min-w-[900px]">
         {/* Checkbox */}
         <span className="w-[40px] flex-shrink-0 flex items-center justify-center">
           <button
@@ -32,7 +32,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
 
         {/* Title + chip de vínculo */}
         <span
-          className="w-[260px] flex-shrink-0 text-[13px] cursor-pointer truncate pr-4 flex items-center gap-2 min-w-0"
+          className="flex-[2] min-w-[200px] text-[13px] cursor-pointer truncate pr-4 flex items-center gap-2 min-w-0"
           onClick={() => onOpenModal(task)}
         >
           <span
@@ -73,7 +73,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           const val = task[prop.id]
           if (prop.id === 'responsible') {
             return (
-              <span key={prop.id} className="w-[140px] flex-shrink-0 text-[12px]">
+              <span key={prop.id} className="flex-1 min-w-[140px] text-[12px]">
                 {val ? (
                   <span className="inline-flex items-center gap-1 text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>
                     <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-semibold flex-shrink-0"
@@ -89,7 +89,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           if (prop.id === 'priority') {
             const labels = { hoje: 'Hoje', 'essa-semana': 'Esta semana', 'proxima-semana': 'Próxima semana', 'qualquer-momento': 'Qualquer' }
             return (
-              <span key={prop.id} className="w-[140px] flex-shrink-0 text-[12px]">
+              <span key={prop.id} className="flex-1 min-w-[140px] text-[12px]">
                 {val ? (
                   <span className="text-[11px] px-2 py-0.5 rounded font-medium" style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-secondary)' }}>
                     {labels[val] || val}
@@ -100,7 +100,7 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
           }
           if (prop.id === 'dueDate' || prop.id === 'executionDate') {
             return (
-              <span key={prop.id} className="w-[140px] flex-shrink-0 text-[12px]">
+              <span key={prop.id} className="flex-1 min-w-[140px] text-[12px]">
                 {val ? (
                   <span style={{ color: 'var(--color-text-secondary)' }}>{val.split('-').reverse().slice(0, 2).join('/')}</span>
                 ) : <span style={{ color: 'var(--color-text-label)' }}>—</span>}
