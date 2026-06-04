@@ -235,7 +235,7 @@ export default function GoalsView({
         <div>
           <button onClick={() => toggleSection('goals')} className="flex items-center gap-2 bg-transparent border-none cursor-pointer mb-4">
             <span className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{collapsedSections['goals'] ? '▸' : '▾'}</span>
-            <h2 className="text-[14px] font-bold m-0" style={{ color: 'var(--color-text-primary)' }}>Metas do Ano {year}</h2>
+            <h2 className="text-[14px] font-bold m-0 uppercase" style={{ color: 'var(--color-text-primary)' }}>METAS DO ANO {year}</h2>
           </button>
 
           {!collapsedSections['goals'] && (
