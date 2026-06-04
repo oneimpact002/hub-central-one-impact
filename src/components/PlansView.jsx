@@ -343,26 +343,9 @@ function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpen
 
   return (
     <div
-      className="rounded-lg relative overflow-hidden"
+      className="rounded-lg"
       style={{ background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)' }}
     >
-      {/* Barra de progresso vertical sutil na lateral direita */}
-      <div
-        className="absolute top-0 right-0 bottom-0"
-        style={{
-          width: '3px',
-          background: 'var(--color-border)',
-        }}
-      >
-        <div
-          className="absolute bottom-0 left-0 right-0 transition-all"
-          style={{
-            height: `${taskProgress}%`,
-            background: taskProgress === 100 ? '#10b981' : '#503FB6',
-            opacity: 0.7,
-          }}
-        />
-      </div>
       {/* Milestone header */}
       <div
         className="group/ms flex items-center gap-2.5 px-3 py-2.5 cursor-pointer"
@@ -480,6 +463,25 @@ function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpen
             <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
+      </div>
+
+      {/* Barra de progresso segmentada (4 partes) */}
+      <div className="flex gap-1 px-3 pb-2">
+        {[0, 1, 2, 3].map(i => {
+          const filled = taskProgress >= (i + 1) * 25
+          return (
+            <div
+              key={i}
+              className="flex-1 h-[3px] rounded-full transition-all"
+              style={{
+                background: filled
+                  ? (taskProgress === 100 ? '#10b981' : '#503FB6')
+                  : 'var(--color-border)',
+                opacity: filled ? 0.85 : 1,
+              }}
+            />
+          )
+        })}
       </div>
 
       {/* Tarefas do milestone (escondidas quando recolhido) */}
