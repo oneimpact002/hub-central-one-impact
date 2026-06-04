@@ -1,5 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, createContext, useContext } from 'react'
 import TaskItem from './TaskItem'
+
+const TaskColWidthContext = createContext(480)
+export const useTaskColWidth = () => useContext(TaskColWidthContext)
 
 const priorityOrder = { hoje: 0, 'essa-semana': 1, 'proxima-semana': 2, 'qualquer-momento': 3 }
 const priorityLabels = { hoje: 'Hoje', 'essa-semana': 'Esta Semana', 'proxima-semana': 'Próxima Semana', 'qualquer-momento': 'Qualquer Momento' }
@@ -18,6 +21,11 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
       } catch { /* ignore */ }
     }
     return properties.map(p => p.id)
+  })
+  const [taskColWidth, setTaskColWidth] = useState(() => {
+    const saved = localStorage.getItem('taskColWidth')
+    const n = saved ? Number(saved) : 480
+    return n >= 200 && n <= 1200 ? n : 480
   })
   const [visibility, setVisibility] = useState(() => {
     const saved = localStorage.getItem('taskColumns')
@@ -39,6 +47,33 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
   useEffect(() => {
     localStorage.setItem('taskColumnOrder', JSON.stringify(columnOrder))
   }, [columnOrder])
+
+  useEffect(() => {
+    localStorage.setItem('taskColWidth', String(taskColWidth))
+  }, [taskColWidth])
+
+  // Resize handle para a coluna TAREFA
+  const resizeState = useRef({ active: false, startX: 0, startW: 0 })
+  const onResizeMouseDown = (e) => {
+    resizeState.current = { active: true, startX: e.clientX, startW: taskColWidth }
+    e.preventDefault()
+    e.stopPropagation()
+  }
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!resizeState.current.active) return
+      const dx = e.clientX - resizeState.current.startX
+      const next = Math.min(1200, Math.max(200, resizeState.current.startW + dx))
+      setTaskColWidth(next)
+    }
+    const onUp = () => { resizeState.current.active = false }
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseup', onUp)
+    return () => {
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseup', onUp)
+    }
+  }, [])
 
   useEffect(() => {
     localStorage.setItem('taskColumns', JSON.stringify(visibility))
@@ -139,6 +174,7 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
   })
 
   return (
+    <TaskColWidthContext.Provider value={taskColWidth}>
     <div className="flex flex-col flex-1 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-8 py-5" style={{ borderBottom: '1px solid var(--color-border)' }}>
@@ -367,7 +403,18 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                   <div style={{ width: 'max-content', minWidth: '100%' }}>
                     <div className="flex items-center px-4 py-2.5" style={{ background: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border)' }}>
                       <span className="w-[40px] flex-shrink-0"></span>
-                      <span className="w-[420px] flex-shrink-0 text-[10px] font-semibold tracking-wider pr-4" style={{ color: 'var(--color-text-muted)' }}>TAREFA</span>
+                      <span
+                        className="flex-shrink-0 text-[10px] font-semibold tracking-wider pr-4 relative"
+                        style={{ color: 'var(--color-text-muted)', width: `${taskColWidth}px` }}
+                      >
+                        TAREFA
+                        <span
+                          onMouseDown={onResizeMouseDown}
+                          className="absolute top-0 right-0 h-full cursor-col-resize"
+                          style={{ width: '6px', marginRight: '-3px', zIndex: 5 }}
+                          title="Arraste para ajustar a largura"
+                        />
+                      </span>
                       {orderedVisibleProperties.map(prop => (
                         <span key={prop.id} className="w-[140px] flex-shrink-0 text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{prop.label.toUpperCase()}</span>
                       ))}
@@ -408,7 +455,19 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                   style={{ background: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border)' }}
                 >
                   <span className="w-[40px] flex-shrink-0"></span>
-                  <span className="w-[480px] flex-shrink-0 text-[11px] font-semibold tracking-wider pr-4" style={{ color: 'var(--color-text-primary)' }}>TAREFA</span>
+                  <span
+                    className="flex-shrink-0 text-[11px] font-semibold tracking-wider pr-4 relative"
+                    style={{ color: 'var(--color-text-primary)', width: `${taskColWidth}px` }}
+                  >
+                    TAREFA
+                    {/* Handle de resize */}
+                    <span
+                      onMouseDown={onResizeMouseDown}
+                      className="absolute top-0 right-0 h-full cursor-col-resize"
+                      style={{ width: '6px', marginRight: '-3px', zIndex: 5 }}
+                      title="Arraste para ajustar a largura"
+                    />
+                  </span>
                   {orderedVisibleProperties.map(prop => (
                     <span key={prop.id} className="w-[120px] flex-shrink-0 text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>{prop.label.toUpperCase()}</span>
                   ))}
@@ -482,5 +541,6 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
         )}
       </div>
     </div>
+    </TaskColWidthContext.Provider>
   )
 }

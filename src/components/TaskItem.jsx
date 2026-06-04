@@ -1,5 +1,8 @@
+import { useTaskColWidth } from './TaskList'
+
 export default function TaskItem({ task, properties, visibility, onToggle, onDelete, onOpenModal, even, planTitle, milestoneTitle }) {
   const visible = properties.filter(p => visibility[p.id])
+  const taskColWidth = useTaskColWidth()
 
   return (
     <div
@@ -32,7 +35,8 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
 
         {/* Title + chip de vínculo */}
         <span
-          className="w-[480px] flex-shrink-0 text-[13px] cursor-pointer pr-4 flex items-center gap-2 min-w-0"
+          className="flex-shrink-0 text-[13px] cursor-pointer pr-4 flex items-center gap-2"
+          style={{ width: `${taskColWidth}px` }}
           onClick={() => onOpenModal(task)}
         >
           <span
