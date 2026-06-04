@@ -56,18 +56,18 @@ export default function PlanModal({ plan, onSave, onClose }) {
 
   const addMilestone = () => {
     if (!newMsTitle.trim()) return
-    setForm({
-      ...form,
+    setForm(prev => ({
+      ...prev,
       milestones: [
-        ...form.milestones,
+        ...prev.milestones,
         {
-          id: Date.now(),
+          id: Date.now() + Math.floor(Math.random() * 1000),
           title: newMsTitle.trim(),
           dueDate: newMsDate,
           done: false,
         },
       ],
-    })
+    }))
     setNewMsTitle('')
     setNewMsDate('')
   }
