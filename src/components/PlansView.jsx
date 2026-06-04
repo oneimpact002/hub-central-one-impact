@@ -308,12 +308,36 @@ function MilestoneTaskItem({ task, onToggle, onDelete, onOpen }) {
   )
 }
 
-function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpenTask, onAddTask, onDeleteMilestone, onToggleMilestone }) {
+function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpenTask, onAddTask, onDeleteMilestone, onUpdateMilestone, onToggleMilestone }) {
   const [expanded, setExpanded] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editTitle, setEditTitle] = useState(milestone.title)
+  const [editDate, setEditDate] = useState(milestone.dueDate || '')
   const milestoneTasks = tasks.filter(t => t.milestoneId === milestone.id)
   const pendingTasks = milestoneTasks.filter(t => !t.completed)
   const doneTasks = milestoneTasks.filter(t => t.completed)
   const overdue = !milestone.done && milestone.dueDate && daysUntil(milestone.dueDate) < 0
+
+  const startEdit = (e) => {
+    e.stopPropagation()
+    setEditTitle(milestone.title)
+    setEditDate(milestone.dueDate || '')
+    setIsEditing(true)
+  }
+  const cancelEdit = (e) => {
+    e?.stopPropagation()
+    setIsEditing(false)
+  }
+  const saveEdit = (e) => {
+    e?.stopPropagation()
+    const t = editTitle.trim()
+    if (t) onUpdateMilestone(planId, milestone.id, { title: t, dueDate: editDate })
+    setIsEditing(false)
+  }
+  const editKeyDown = (e) => {
+    if (e.key === 'Enter') saveEdit(e)
+    if (e.key === 'Escape') cancelEdit(e)
+  }
 
   return (
     <div
@@ -345,15 +369,51 @@ function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpen
           )}
         </button>
 
-        <span
-          className="flex-1 text-[13px] font-medium truncate"
-          style={{
-            color: milestone.done ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
-            textDecoration: milestone.done ? 'line-through' : 'none',
-          }}
-        >
-          {milestone.title}
-        </span>
+        {isEditing ? (
+          <div className="flex-1 flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+            <input
+              type="text"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              onKeyDown={editKeyDown}
+              autoFocus
+              className="flex-1 text-[13px] font-medium rounded px-2 py-1"
+              style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-text-primary)', color: 'var(--color-text-primary)' }}
+            />
+            <input
+              type="date"
+              value={editDate}
+              onChange={(e) => setEditDate(e.target.value)}
+              onKeyDown={editKeyDown}
+              className="text-[11px] rounded px-1 py-1"
+              style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)', width: '130px' }}
+            />
+            <button
+              onClick={saveEdit}
+              className="text-[11px] font-semibold cursor-pointer rounded px-2 py-1 border-none"
+              style={{ background: 'var(--color-button-cta)', color: 'var(--color-button-cta-text)' }}
+            >
+              Salvar
+            </button>
+            <button
+              onClick={cancelEdit}
+              className="text-[11px] cursor-pointer rounded px-2 py-1 border-none"
+              style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-muted)' }}
+            >
+              ✕
+            </button>
+          </div>
+        ) : (
+          <span
+            className="flex-1 text-[13px] font-medium truncate"
+            style={{
+              color: milestone.done ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
+              textDecoration: milestone.done ? 'line-through' : 'none',
+            }}
+          >
+            {milestone.title}
+          </span>
+        )}
 
         <span
           className="text-[11px] font-semibold flex-shrink-0"
@@ -362,17 +422,33 @@ function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpen
           {doneTasks.length}/{milestoneTasks.length}
         </span>
 
-        <span
-          className="text-[10px] flex-shrink-0"
-          style={{
-            color: overdue ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
-            fontWeight: overdue ? 600 : 400,
-            minWidth: '45px',
-            textAlign: 'right',
-          }}
-        >
-          {milestone.dueDate ? formatDateBR(milestone.dueDate) : ''}
-        </span>
+        {!isEditing && (
+          <span
+            className="text-[10px] flex-shrink-0"
+            style={{
+              color: overdue ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+              fontWeight: overdue ? 600 : 400,
+              minWidth: '45px',
+              textAlign: 'right',
+            }}
+          >
+            {milestone.dueDate ? formatDateBR(milestone.dueDate) : ''}
+          </span>
+        )}
+
+        {!isEditing && (
+          <button
+            onClick={startEdit}
+            className="opacity-0 group-hover/ms:opacity-100 border-none cursor-pointer p-1 rounded transition-opacity flex-shrink-0"
+            style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-muted)' }}
+            title="Editar milestone"
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+            </svg>
+          </button>
+        )}
 
         <button
           onClick={(e) => { e.stopPropagation(); onDeleteMilestone(milestone.id) }}
@@ -434,7 +510,7 @@ function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpen
   )
 }
 
-function PlanCard({ plan, tasks, isExpanded, onToggleExpand, onOpenModal, onDelete, onToggleMilestone, onDeleteMilestone, onAddTaskToMilestone, onToggleTask, onDeleteTask, onOpenTaskModal, onAddDocument, onDeleteDocument }) {
+function PlanCard({ plan, tasks, isExpanded, onToggleExpand, onOpenModal, onDelete, onToggleMilestone, onUpdateMilestone, onDeleteMilestone, onAddTaskToMilestone, onToggleTask, onDeleteTask, onOpenTaskModal, onAddDocument, onDeleteDocument }) {
   const doneMilestones = plan.milestones.filter(m => m.done).length
   const totalMilestones = plan.milestones.length
   const planTasks = tasks.filter(t => t.planId === plan.id)
@@ -613,6 +689,7 @@ function PlanCard({ plan, tasks, isExpanded, onToggleExpand, onOpenModal, onDele
                     onOpenTask={onOpenTaskModal}
                     onAddTask={onAddTaskToMilestone}
                     onDeleteMilestone={onDeleteMilestone}
+                    onUpdateMilestone={(msId, fields) => onUpdateMilestone(plan.id, msId, fields)}
                     onToggleMilestone={(msId) => onToggleMilestone(plan.id, msId)}
                   />
                 ))}
@@ -635,6 +712,7 @@ export default function PlansView({
   onOpenModal,
   onDelete,
   onToggleMilestone,
+  onUpdateMilestone,
   onDeleteMilestone,
   onAddTaskToMilestone,
   onToggleTask,
@@ -732,6 +810,7 @@ export default function PlansView({
                 onOpenModal={() => onOpenModal(plan)}
                 onDelete={() => onDelete(plan.id)}
                 onToggleMilestone={onToggleMilestone}
+                onUpdateMilestone={onUpdateMilestone}
                 onDeleteMilestone={onDeleteMilestone}
                 onAddTaskToMilestone={onAddTaskToMilestone}
                 onToggleTask={onToggleTask}

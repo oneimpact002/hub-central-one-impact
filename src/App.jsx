@@ -419,6 +419,17 @@ function App() {
     } : p))
   }
 
+  const updateMilestone = async (planId, msId, fields) => {
+    const dbFields = {}
+    if ('title' in fields) dbFields.title = fields.title
+    if ('dueDate' in fields) dbFields.due_date = fields.dueDate || null
+    await supabase.from('plan_milestones').update(dbFields).eq('id', msId)
+    setPlans(plans.map(p => p.id === planId ? {
+      ...p,
+      milestones: p.milestones.map(m => m.id === msId ? { ...m, ...fields } : m),
+    } : p))
+  }
+
   const addDocument = async (planId, title, url) => {
     const { data } = await supabase.from('plan_documents').insert({ plan_id: planId, title, url }).select().single()
     if (data) {
@@ -585,7 +596,7 @@ function App() {
           <TaskList tasks={tasks} properties={properties} plans={plans} teamMembers={TEAM_MEMBERS} onToggle={toggleTask} onDelete={deleteTask} onOpenModal={openModal} />
         )}
         {activeTab === 'planos' && (
-          <PlansView plans={plans} tasks={tasks} onOpenModal={openPlanModal} onDelete={deletePlan} onToggleMilestone={toggleMilestone} onDeleteMilestone={deleteMilestone} onToggleTask={toggleTask} onDeleteTask={deleteTask} onOpenTaskModal={openModal} onAddTaskToMilestone={openTaskModalForMilestone} onAddDocument={addDocument} onDeleteDocument={deleteDocument} />
+          <PlansView plans={plans} tasks={tasks} onOpenModal={openPlanModal} onDelete={deletePlan} onToggleMilestone={toggleMilestone} onUpdateMilestone={updateMilestone} onDeleteMilestone={deleteMilestone} onToggleTask={toggleTask} onDeleteTask={deleteTask} onOpenTaskModal={openModal} onAddTaskToMilestone={openTaskModalForMilestone} onAddDocument={addDocument} onDeleteDocument={deleteDocument} />
         )}
         {activeTab === 'calendario' && (
           <CalendarView tasks={tasks} onOpenModal={openModal} onUpdateTask={updateTask} />
