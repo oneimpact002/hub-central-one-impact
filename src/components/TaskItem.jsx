@@ -5,11 +5,11 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
     <div
       className="group transition-colors"
       style={{
-        background: even ? 'var(--color-bg-surface)' : 'var(--color-bg-main)',
+        background: '#FAFAFA',
         borderBottom: '1px solid var(--color-border)'
       }}
       onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-bg-row-hover)'}
-      onMouseLeave={(e) => e.currentTarget.style.background = even ? 'var(--color-bg-surface)' : 'var(--color-bg-main)'}
+      onMouseLeave={(e) => e.currentTarget.style.background = '#FAFAFA'}
     >
       <div className="flex items-center px-4 py-3">
         {/* Checkbox */}
