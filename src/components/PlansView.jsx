@@ -16,13 +16,15 @@ const statusLabels = {
 }
 
 const taskStatusMeta = {
-  'pendente':          { label: 'Pendente',          color: '#f59e0b' },
-  'em andamento':      { label: 'Em Andamento',      color: '#3b82f6' },
-  'em-andamento':      { label: 'Em Andamento',      color: '#3b82f6' },
-  'concluida':         { label: 'Concluída',         color: '#10b981' },
-  'concluída':         { label: 'Concluída',         color: '#10b981' },
-  'bloqueada':         { label: 'Bloqueada',         color: '#ef4444' },
-  'cancelada':         { label: 'Cancelada',         color: '#6b7280' },
+  'pendente':          { label: 'Pendente',     color: '#f59e0b' },
+  'em progresso':      { label: 'Em Progresso', color: '#3b82f6' },
+  'em andamamento':    { label: 'Em Progresso', color: '#3b82f6' },
+  'em andamento':      { label: 'Em Progresso', color: '#3b82f6' },
+  'concluido':         { label: 'Concluído',    color: '#10b981' },
+  'concluído':         { label: 'Concluído',    color: '#10b981' },
+  'concluida':         { label: 'Concluído',    color: '#10b981' },
+  'bloqueada':         { label: 'Bloqueada',    color: '#ef4444' },
+  'cancelada':         { label: 'Cancelada',    color: '#6b7280' },
 }
 
 function formatDateBR(dateStr) {
