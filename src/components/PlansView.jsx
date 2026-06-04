@@ -309,7 +309,7 @@ function MilestoneTaskItem({ task, onToggle, onDelete, onOpen }) {
 }
 
 function MilestoneSection({ planId, milestone, tasks, onToggle, onDelete, onOpenTask, onAddTask, onDeleteMilestone, onUpdateMilestone, onToggleMilestone }) {
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(milestone.title)
   const [editDate, setEditDate] = useState(milestone.dueDate || '')
@@ -677,7 +677,7 @@ function PlanCard({ plan, tasks, isExpanded, onToggleExpand, onOpenModal, onDele
             </div>
 
             {plan.milestones.length > 0 ? (
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col gap-2.5 relative pl-4" style={{ borderLeft: '3px solid #503FB6' }}>
                 {plan.milestones.map(m => (
                   <MilestoneSection
                     key={m.id}
