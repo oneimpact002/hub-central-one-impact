@@ -214,106 +214,286 @@ function DocumentsSection({ planId, documents, onAdd, onDelete }) {
   )
 }
 
-function MilestoneTaskItem({ task, onToggle, onDelete, onOpen }) {
+function MilestoneTaskItem({ task, index, total, onToggle, onReorderTasks, onDelete, onOpen }) {
   const overdue = !task.completed && task.dueDate && daysUntil(task.dueDate) < 0
+  const [isDragging, setIsDragging] = useState(false)
+  const [isDragOver, setIsDragOver] = useState(false)
+
+  if (!onReorderTasks) {
+    return (
+      <div
+        className="group/mt flex items-start gap-2.5 px-2.5 py-2 rounded-md transition-colors cursor-pointer"
+        style={{ background: 'var(--color-bg-surface)' }}
+        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-bg-row-hover)'}
+        onMouseLeave={(e) => e.currentTarget.style.background = 'var(--color-bg-surface)'}
+        onClick={onOpen}
+      >
+        <button
+          onClick={(e) => { e.stopPropagation(); onToggle() }}
+          className="w-[14px] h-[14px] rounded-full border-[1.5px] flex-shrink-0 cursor-pointer flex items-center justify-center transition-all mt-0.5"
+          style={{
+            background: task.completed ? 'var(--color-text-secondary)' : 'transparent',
+            borderColor: task.completed ? 'var(--color-text-secondary)' : '#555555',
+          }}
+        >
+          {task.completed && (
+            <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
+              <path d="M2 6l3 3 5-5" stroke="var(--color-bg-main)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+        </button>
+
+        <div className="flex-1 flex flex-col gap-1.5 min-w-0">
+          <span
+            className="text-[12px] truncate"
+            style={{
+              color: task.completed ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
+              textDecoration: task.completed ? 'line-through' : 'none',
+            }}
+          >
+            {task.title}
+          </span>
+
+          <div className="flex items-center gap-3 flex-wrap">
+            {task.responsible && (
+              <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+                <span style={{ fontWeight: 600 }}>Responsável:</span>
+                <span
+                  className="px-1.5 py-0.5 rounded"
+                  style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-secondary)', fontWeight: 500 }}
+                >
+                  {task.responsible}
+                </span>
+              </span>
+            )}
+            {task.dueDate && (
+              <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+                <span style={{ fontWeight: 600 }}>Prazo:</span>
+                <span
+                  className="px-1.5 py-0.5 rounded"
+                  style={{
+                    background: 'var(--color-bg-input)',
+                    color: overdue ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                    fontWeight: overdue ? 600 : 500,
+                  }}
+                >
+                  {formatDateBR(task.dueDate)}
+                </span>
+              </span>
+            )}
+            {task.executionDate && (
+              <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+                <span style={{ fontWeight: 600 }}>Execução:</span>
+                <span
+                  className="px-1.5 py-0.5 rounded"
+                  style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-secondary)', fontWeight: 500 }}
+                >
+                  {formatDateBR(task.executionDate)}
+                </span>
+              </span>
+            )}
+          </div>
+        </div>
+
+        <button
+          onClick={(e) => { e.stopPropagation(); onDelete() }}
+          className="opacity-0 group-hover/mt:opacity-100 border-none cursor-pointer p-0.5 rounded transition-opacity flex-shrink-0"
+          style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-muted)' }}
+          title="Remover tarefa"
+        >
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    )
+  }
+
+  const handleDragStart = (e) => {
+    e.stopPropagation()
+    setIsDragging(true)
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', String(task.id))
+  }
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    e.dataTransfer.dropEffect = 'move'
+    if (!isDragOver) setIsDragOver(true)
+  }
+  const handleDragLeave = (e) => {
+    e.stopPropagation()
+    setIsDragOver(false)
+  }
+  const handleDrop = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragOver(false)
+    setIsDragging(false)
+    const draggedId = Number(e.dataTransfer.getData('text/plain'))
+    if (!draggedId || draggedId === task.id) return
+    onReorderTasks(task.milestoneId, draggedId, index)
+  }
+  const handleDragEnd = (e) => {
+    e.stopPropagation()
+    setIsDragging(false)
+    setIsDragOver(false)
+  }
+
+  const moveUp = (e) => {
+    e.stopPropagation()
+    if (index === 0) return
+    onReorderTasks(task.milestoneId, task.id, index - 1)
+  }
+  const moveDown = (e) => {
+    e.stopPropagation()
+    if (index === total - 1) return
+    onReorderTasks(task.milestoneId, task.id, index + 1)
+  }
 
   return (
     <div
-      className="group/mt flex items-start gap-2.5 px-2.5 py-2 rounded-md transition-colors cursor-pointer"
-      style={{ background: 'var(--color-bg-surface)' }}
-      onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-bg-row-hover)'}
-      onMouseLeave={(e) => e.currentTarget.style.background = 'var(--color-bg-surface)'}
-      onClick={onOpen}
+      className="group/mt flex items-stretch rounded-md transition-colors"
+      style={{
+        background: 'var(--color-bg-surface)',
+        opacity: isDragging ? 0.4 : 1,
+        outline: isDragOver ? '2px solid #503FB6' : 'none',
+        outlineOffset: '-2px',
+      }}
+      draggable
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      onDragEnd={handleDragEnd}
     >
-      <button
-        onClick={(e) => { e.stopPropagation(); onToggle() }}
-        className="w-[14px] h-[14px] rounded-full border-[1.5px] flex-shrink-0 cursor-pointer flex items-center justify-center transition-all mt-0.5"
-        style={{
-          background: task.completed ? 'var(--color-text-secondary)' : 'transparent',
-          borderColor: task.completed ? 'var(--color-text-secondary)' : '#555555',
-        }}
+      {/* Coluna esquerda: setas + número */}
+      <div
+        className="flex flex-col items-center justify-center gap-0.5 px-1.5 flex-shrink-0 cursor-grab active:cursor-grabbing"
+        style={{ borderRight: '1px solid var(--color-border)', minWidth: '24px', opacity: 0.5 }}
+        title="Arraste para reordenar"
       >
-        {task.completed && (
-          <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
-            <path d="M2 6l3 3 5-5" stroke="var(--color-bg-main)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        )}
-      </button>
-
-      <div className="flex-1 flex flex-col gap-1.5 min-w-0">
-        <span
-          className="text-[12px] truncate"
-          style={{
-            color: task.completed ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
-            textDecoration: task.completed ? 'line-through' : 'none',
-          }}
+        <button
+          onClick={moveUp}
+          disabled={index === 0}
+          className="border-none cursor-pointer p-0.5 rounded disabled:opacity-20 disabled:cursor-not-allowed"
+          style={{ background: 'transparent', color: 'var(--color-text-muted)' }}
+          title="Mover para cima"
         >
-          {task.title}
+          <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+        <span className="text-[9px] font-semibold tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
+          {String(index + 1).padStart(2, '0')}
         </span>
-
-        {/* Properties row */}
-        <div className="flex items-center gap-3 flex-wrap">
-          {task.responsible && (
-            <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-              <span style={{ fontWeight: 600 }}>Responsável:</span>
-              <span
-                className="px-1.5 py-0.5 rounded"
-                style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-secondary)', fontWeight: 500 }}
-              >
-                {task.responsible}
-              </span>
-            </span>
-          )}
-          {task.dueDate && (
-            <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-              <span style={{ fontWeight: 600 }}>Prazo:</span>
-              <span
-                className="px-1.5 py-0.5 rounded"
-                style={{
-                  background: 'var(--color-bg-input)',
-                  color: overdue ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
-                  fontWeight: overdue ? 600 : 500,
-                }}
-              >
-                {formatDateBR(task.dueDate)}
-              </span>
-            </span>
-          )}
-          {task.executionDate && (
-            <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-              <span style={{ fontWeight: 600 }}>Execução:</span>
-              <span
-                className="px-1.5 py-0.5 rounded"
-                style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-secondary)', fontWeight: 500 }}
-              >
-                {formatDateBR(task.executionDate)}
-              </span>
-            </span>
-          )}
-        </div>
+        <button
+          onClick={moveDown}
+          disabled={index === total - 1}
+          className="border-none cursor-pointer p-0.5 rounded disabled:opacity-20 disabled:cursor-not-allowed"
+          style={{ background: 'transparent', color: 'var(--color-text-muted)' }}
+          title="Mover para baixo"
+        >
+          <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
       </div>
 
-      <button
-        onClick={(e) => { e.stopPropagation(); onDelete() }}
-        className="opacity-0 group-hover/mt:opacity-100 border-none cursor-pointer p-0.5 rounded transition-opacity flex-shrink-0"
-        style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-muted)' }}
-        title="Remover tarefa"
+      {/* Conteúdo da tarefa */}
+      <div
+        className="flex-1 flex items-start gap-2.5 px-2.5 py-2 cursor-pointer min-w-0"
+        onMouseEnter={(e) => e.currentTarget.parentElement.style.background = 'var(--color-bg-row-hover)'}
+        onMouseLeave={(e) => e.currentTarget.parentElement.style.background = 'var(--color-bg-surface)'}
+        onClick={onOpen}
       >
-        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); onToggle() }}
+          className="w-[14px] h-[14px] rounded-full border-[1.5px] flex-shrink-0 cursor-pointer flex items-center justify-center transition-all mt-0.5"
+          style={{
+            background: task.completed ? 'var(--color-text-secondary)' : 'transparent',
+            borderColor: task.completed ? 'var(--color-text-secondary)' : '#555555',
+          }}
+        >
+          {task.completed && (
+            <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
+              <path d="M2 6l3 3 5-5" stroke="var(--color-bg-main)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+        </button>
+
+        <div className="flex-1 flex flex-col gap-1.5 min-w-0">
+          <span
+            className="text-[12px] truncate"
+            style={{
+              color: task.completed ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
+              textDecoration: task.completed ? 'line-through' : 'none',
+            }}
+          >
+            {task.title}
+          </span>
+
+          <div className="flex items-center gap-3 flex-wrap">
+            {task.responsible && (
+              <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+                <span style={{ fontWeight: 600 }}>Responsável:</span>
+                <span
+                  className="px-1.5 py-0.5 rounded"
+                  style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-secondary)', fontWeight: 500 }}
+                >
+                  {task.responsible}
+                </span>
+              </span>
+            )}
+            {task.dueDate && (
+              <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+                <span style={{ fontWeight: 600 }}>Prazo:</span>
+                <span
+                  className="px-1.5 py-0.5 rounded"
+                  style={{
+                    background: 'var(--color-bg-input)',
+                    color: overdue ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                    fontWeight: overdue ? 600 : 500,
+                  }}
+                >
+                  {formatDateBR(task.dueDate)}
+                </span>
+              </span>
+            )}
+            {task.executionDate && (
+              <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+                <span style={{ fontWeight: 600 }}>Execução:</span>
+                <span
+                  className="px-1.5 py-0.5 rounded"
+                  style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-secondary)', fontWeight: 500 }}
+                >
+                  {formatDateBR(task.executionDate)}
+                </span>
+              </span>
+            )}
+          </div>
+        </div>
+
+        <button
+          onClick={(e) => { e.stopPropagation(); onDelete() }}
+          className="opacity-0 group-hover/mt:opacity-100 border-none cursor-pointer p-0.5 rounded transition-opacity flex-shrink-0"
+          style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-muted)' }}
+          title="Remover tarefa"
+        >
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
     </div>
   )
 }
 
-function MilestoneSection({ planId, milestone, index, total, tasks, onToggle, onDelete, onOpenTask, onAddTask, onDeleteMilestone, onUpdateMilestone, onToggleMilestone, onMoveUp, onMoveDown, isDragging, isDragOver, onDragStart, onDragOver, onDragLeave, onDrop, onDragEnd }) {
+function MilestoneSection({ planId, milestone, index, total, tasks, onToggle, onReorderTasks, onDelete, onOpenTask, onAddTask, onDeleteMilestone, onUpdateMilestone, onToggleMilestone, onMoveUp, onMoveDown, isDragging, isDragOver, onDragStart, onDragOver, onDragLeave, onDrop, onDragEnd }) {
   const [expanded, setExpanded] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(milestone.title)
   const [editDate, setEditDate] = useState(milestone.dueDate || '')
   const milestoneTasks = tasks.filter(t => t.milestoneId === milestone.id)
+    .sort((a, b) => (a.position || 0) - (b.position || 0))
   const pendingTasks = milestoneTasks.filter(t => !t.completed)
   const doneTasks = milestoneTasks.filter(t => t.completed)
   const overdue = !milestone.done && milestone.dueDate && daysUntil(milestone.dueDate) < 0
@@ -530,11 +710,14 @@ function MilestoneSection({ planId, milestone, index, total, tasks, onToggle, on
       {/* Tarefas do milestone (escondidas quando recolhido) */}
       {expanded && (
         <div className="p-2 flex flex-col gap-1">
-        {pendingTasks.map(task => (
+        {pendingTasks.map((task, i) => (
           <MilestoneTaskItem
             key={task.id}
             task={task}
+            index={i}
+            total={pendingTasks.length}
             onToggle={() => onToggle(task.id)}
+            onReorderTasks={onReorderTasks}
             onDelete={() => onDelete(task.id)}
             onOpen={() => onOpenTask(task)}
           />
@@ -575,7 +758,7 @@ function MilestoneSection({ planId, milestone, index, total, tasks, onToggle, on
   )
 }
 
-function PlanCard({ plan, tasks, isExpanded, onToggleExpand, onOpenModal, onDelete, onToggleMilestone, onUpdateMilestone, onReorderMilestones, onDeleteMilestone, onAddTaskToMilestone, onToggleTask, onDeleteTask, onOpenTaskModal, onAddDocument, onDeleteDocument }) {
+function PlanCard({ plan, tasks, isExpanded, onToggleExpand, onOpenModal, onDelete, onToggleMilestone, onUpdateMilestone, onReorderMilestones, onDeleteMilestone, onAddTaskToMilestone, onToggleTask, onReorderTasks, onDeleteTask, onOpenTaskModal, onAddDocument, onDeleteDocument }) {
   const [draggedMsId, setDraggedMsId] = useState(null)
   const [dragOverMsId, setDragOverMsId] = useState(null)
 
@@ -793,6 +976,7 @@ function PlanCard({ plan, tasks, isExpanded, onToggleExpand, onOpenModal, onDele
                     total={plan.milestones.length}
                     tasks={tasks}
                     onToggle={onToggleTask}
+                    onReorderTasks={onReorderTasks}
                     onDelete={onDeleteTask}
                     onOpenTask={onOpenTaskModal}
                     onAddTask={onAddTaskToMilestone}
@@ -834,6 +1018,7 @@ export default function PlansView({
   onDeleteMilestone,
   onAddTaskToMilestone,
   onToggleTask,
+  onReorderTasks,
   onDeleteTask,
   onOpenTaskModal,
   onAddDocument,
@@ -933,6 +1118,7 @@ export default function PlansView({
                 onDeleteMilestone={onDeleteMilestone}
                 onAddTaskToMilestone={onAddTaskToMilestone}
                 onToggleTask={onToggleTask}
+                onReorderTasks={onReorderTasks}
                 onDeleteTask={onDeleteTask}
                 onOpenTaskModal={onOpenTaskModal}
                 onAddDocument={onAddDocument}

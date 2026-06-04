@@ -44,6 +44,7 @@ const mapTask = t => ({
   completed: t.completed || false,
   planId: t.plan_id || null,
   milestoneId: t.milestone_id || null,
+  position: t.position ?? 0,
 })
 
 const mapPlan = p => ({
@@ -443,6 +444,25 @@ function App() {
     } : p))
   }
 
+  const reorderTasks = async (milestoneId, draggedId, targetIndex) => {
+    // Pega todas as tarefas pendentes deste milestone
+    const pending = tasks
+      .filter(t => t.milestoneId === milestoneId && !t.completed)
+      .sort((a, b) => (a.position || 0) - (b.position || 0))
+    const ids = pending.map(t => t.id)
+    const fromIdx = ids.indexOf(draggedId)
+    if (fromIdx < 0) return
+    const next = [...ids]
+    next.splice(fromIdx, 1)
+    const insertAt = targetIndex > fromIdx ? targetIndex : targetIndex
+    next.splice(insertAt, 0, draggedId)
+    const updates = next.map((id, idx) =>
+      supabase.from('tasks').update({ position: idx }).eq('id', id)
+    )
+    await Promise.all(updates)
+    setTasks(tasks.map(t => next.includes(t.id) ? { ...t, position: next.indexOf(t.id) } : t))
+  }
+
   const addDocument = async (planId, title, url) => {
     const { data } = await supabase.from('plan_documents').insert({ plan_id: planId, title, url }).select().single()
     if (data) {
@@ -609,7 +629,7 @@ function App() {
           <TaskList tasks={tasks} properties={properties} plans={plans} teamMembers={TEAM_MEMBERS} onToggle={toggleTask} onDelete={deleteTask} onOpenModal={openModal} />
         )}
         {activeTab === 'planos' && (
-          <PlansView plans={plans} tasks={tasks} onOpenModal={openPlanModal} onDelete={deletePlan} onToggleMilestone={toggleMilestone} onUpdateMilestone={updateMilestone} onReorderMilestones={reorderMilestones} onDeleteMilestone={deleteMilestone} onToggleTask={toggleTask} onDeleteTask={deleteTask} onOpenTaskModal={openModal} onAddTaskToMilestone={openTaskModalForMilestone} onAddDocument={addDocument} onDeleteDocument={deleteDocument} />
+          <PlansView plans={plans} tasks={tasks} onOpenModal={openPlanModal} onDelete={deletePlan} onToggleMilestone={toggleMilestone} onUpdateMilestone={updateMilestone} onReorderMilestones={reorderMilestones} onDeleteMilestone={deleteMilestone} onToggleTask={toggleTask} onReorderTasks={reorderTasks} onDeleteTask={deleteTask} onOpenTaskModal={openModal} onAddTaskToMilestone={openTaskModalForMilestone} onAddDocument={addDocument} onDeleteDocument={deleteDocument} />
         )}
         {activeTab === 'calendario' && (
           <CalendarView tasks={tasks} onOpenModal={openModal} onUpdateTask={updateTask} />
