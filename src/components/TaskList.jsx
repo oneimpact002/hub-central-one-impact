@@ -9,6 +9,16 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
   const [columnsOpen, setColumnsOpen] = useState(false)
   const [groupBy, setGroupBy] = useState('none')
   const [filterResponsible, setFilterResponsible] = useState('')
+  const [columnOrder, setColumnOrder] = useState(() => {
+    const saved = localStorage.getItem('taskColumnOrder')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length === properties.length) return parsed
+      } catch { /* ignore */ }
+    }
+    return properties.map(p => p.id)
+  })
   const [visibility, setVisibility] = useState(() => {
     const saved = localStorage.getItem('taskColumns')
     if (saved) {
@@ -19,6 +29,16 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
   const columnsRef = useRef(null)
   const groupRef = useRef(null)
   const filterRef = useRef(null)
+  const [draggedColId, setDraggedColId] = useState(null)
+  const [dragOverColId, setDragOverColId] = useState(null)
+
+  useEffect(() => {
+    localStorage.setItem('taskColumns', JSON.stringify(visibility))
+  }, [visibility])
+
+  useEffect(() => {
+    localStorage.setItem('taskColumnOrder', JSON.stringify(columnOrder))
+  }, [columnOrder])
 
   useEffect(() => {
     localStorage.setItem('taskColumns', JSON.stringify(visibility))
@@ -36,6 +56,40 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
 
   const toggleColumn = (id) => setVisibility(v => ({ ...v, [id]: !v[id] }))
   const visibleCount = Object.values(visibility).filter(Boolean).length
+
+  // Colunas visíveis na ordem do columnOrder
+  const orderedVisibleProperties = columnOrder
+    .map(id => properties.find(p => p.id === id))
+    .filter(p => p && visibility[p.id])
+
+  // Drag & drop handlers
+  const handleColDragStart = (e, id) => {
+    setDraggedColId(id)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+  const handleColDragOver = (e, id) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (draggedColId && draggedColId !== id) setDragOverColId(id)
+  }
+  const handleColDragLeave = () => setDragOverColId(null)
+  const handleColDrop = (e, targetId) => {
+    e.preventDefault()
+    setDragOverColId(null)
+    if (!draggedColId || draggedColId === targetId) { setDraggedColId(null); return }
+    const next = [...columnOrder]
+    const fromIdx = next.indexOf(draggedColId)
+    const toIdx = next.indexOf(targetId)
+    if (fromIdx < 0 || toIdx < 0) { setDraggedColId(null); return }
+    next.splice(fromIdx, 1)
+    next.splice(toIdx, 0, draggedColId)
+    setColumnOrder(next)
+    setDraggedColId(null)
+  }
+  const handleColDragEnd = () => {
+    setDraggedColId(null)
+    setDragOverColId(null)
+  }
 
   const [groupByOpen, setGroupByOpen] = useState(false)
   const [filterOpen, setFilterOpen] = useState(false)
@@ -226,34 +280,55 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                 className="absolute right-0 top-full mt-1.5 rounded-lg p-2 z-50 min-w-[180px]"
                 style={{ background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)', boxShadow: '0 8px 24px var(--color-shadow)' }}
               >
-                <p className="text-[10px] font-bold tracking-wider px-1 pb-2" style={{ color: 'var(--color-text-muted)' }}>COLUNAS VISÍVEIS</p>
-                {properties.map(prop => (
-                  <label
-                    key={prop.id}
-                    className="flex items-center gap-2.5 px-1 py-1.5 rounded cursor-pointer transition-colors"
-                    style={{ color: 'var(--color-text-secondary)' }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-bg-row-hover)'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                  >
+                <p className="text-[10px] font-bold tracking-wider px-1 pb-2" style={{ color: 'var(--color-text-muted)' }}>COLUNAS VISÍVEIS (arraste pra reordenar)</p>
+                {columnOrder.map(id => {
+                  const prop = properties.find(p => p.id === id)
+                  if (!prop) return null
+                  const isDragging = draggedColId === prop.id
+                  const isDragOver = dragOverColId === prop.id
+                  return (
                     <div
-                      className="w-[14px] h-[14px] rounded flex items-center justify-center cursor-pointer flex-shrink-0 transition-colors"
+                      key={prop.id}
+                      draggable
+                      onDragStart={(e) => handleColDragStart(e, prop.id)}
+                      onDragOver={(e) => handleColDragOver(e, prop.id)}
+                      onDragLeave={handleColDragLeave}
+                      onDrop={(e) => handleColDrop(e, prop.id)}
+                      onDragEnd={handleColDragEnd}
+                      className="flex items-center gap-2.5 px-1 py-1.5 rounded cursor-pointer transition-colors"
                       style={{
-                        background: visibility[prop.id] ? 'var(--color-text-primary)' : 'transparent',
-                        border: visibility[prop.id] ? 'none' : '1.5px solid var(--color-text-muted)',
+                        color: 'var(--color-text-secondary)',
+                        opacity: isDragging ? 0.4 : 1,
+                        outline: isDragOver ? '1.5px solid #503FB6' : 'none',
+                        outlineOffset: '-1.5px',
                       }}
-                      onClick={() => toggleColumn(prop.id)}
+                      onMouseEnter={(e) => { if (!isDragging && !isDragOver) e.currentTarget.style.background = 'var(--color-bg-row-hover)' }}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                      {visibility[prop.id] && (
-                        <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
-                          <path d="M2 6l3 3 5-5" stroke="var(--color-bg-main)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      )}
+                      <span
+                        style={{ color: 'var(--color-text-muted)', cursor: 'grab', fontSize: '12px', opacity: 0.5 }}
+                        title="Arrastar"
+                      >⋮⋮</span>
+                      <div
+                        className="w-[14px] h-[14px] rounded flex items-center justify-center cursor-pointer flex-shrink-0 transition-colors"
+                        style={{
+                          background: visibility[prop.id] ? 'var(--color-text-primary)' : 'transparent',
+                          border: visibility[prop.id] ? 'none' : '1.5px solid var(--color-text-muted)',
+                        }}
+                        onClick={() => toggleColumn(prop.id)}
+                      >
+                        {visibility[prop.id] && (
+                          <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
+                            <path d="M2 6l3 3 5-5" stroke="var(--color-bg-main)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
+                      </div>
+                      <span className="text-[12px] flex-1" style={{ color: visibility[prop.id] ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}>
+                        {prop.label}
+                      </span>
                     </div>
-                    <span className="text-[12px] flex-1" style={{ color: visibility[prop.id] ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}>
-                      {prop.label}
-                    </span>
-                  </label>
-                ))}
+                  )
+                })}
               </div>
             )}
           </div>
@@ -288,32 +363,34 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                 </div>
 
                 {/* Table */}
-                <div className="rounded-xl overflow-hidden" style={{ border: '1px solid var(--color-border)' }}>
-                  <div className="flex items-center px-4 py-2.5" style={{ background: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border)' }}>
-                    <span className="w-[40px]"></span>
-                    <span className="flex-1 text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>TAREFA</span>
-                    {properties.filter(p => visibility[p.id]).map(prop => (
-                      <span key={prop.id} className="w-[120px] text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{prop.label.toUpperCase()}</span>
+                <div className="rounded-xl overflow-x-auto" style={{ border: '1px solid var(--color-border)' }}>
+                  <div className="flex items-center px-4 py-2.5 min-w-max" style={{ background: 'var(--color-bg-surface)', borderBottom: '1px solid var(--color-border)' }}>
+                    <span className="w-[40px] flex-shrink-0"></span>
+                    <span className="w-[260px] flex-shrink-0 text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>TAREFA</span>
+                    {orderedVisibleProperties.map(prop => (
+                      <span key={prop.id} className="w-[140px] flex-shrink-0 text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{prop.label.toUpperCase()}</span>
                     ))}
-                    <span className="w-[50px]"></span>
+                    <span className="w-[50px] flex-shrink-0"></span>
                   </div>
-                  {taskList.map((task, i) => {
-                    const { planTitle, milestoneTitle } = resolveContext(task)
-                    return (
-                      <TaskItem
-                        key={task.id}
-                        task={task}
-                        properties={properties}
-                        visibility={visibility}
-                        onToggle={onToggle}
-                        onDelete={onDelete}
-                        onOpenModal={onOpenModal}
-                        even={i % 2 === 0}
-                        planTitle={planTitle}
-                        milestoneTitle={milestoneTitle}
-                      />
-                    )
-                  })}
+                  <div className="min-w-max">
+                    {taskList.map((task, i) => {
+                      const { planTitle, milestoneTitle } = resolveContext(task)
+                      return (
+                        <TaskItem
+                          key={task.id}
+                          task={task}
+                          properties={orderedVisibleProperties}
+                          visibility={visibility}
+                          onToggle={onToggle}
+                          onDelete={onDelete}
+                          onOpenModal={onOpenModal}
+                          even={i % 2 === 0}
+                          planTitle={planTitle}
+                          milestoneTitle={milestoneTitle}
+                        />
+                      )
+                    })}
+                  </div>
                 </div>
               </div>
             ))}
@@ -324,39 +401,43 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
         ) : (
           /* ═══ VIEW PADRÃO (TABELA) ═══ */
           <>
-            <div
-              className="flex items-center px-4 py-3 rounded-t-xl"
-              style={{ background: 'var(--color-bg-surface)', borderTop: '1px solid var(--color-border)', borderLeft: '1px solid var(--color-border)', borderRight: '1px solid var(--color-border)' }}
-            >
-              <span className="w-[40px]"></span>
-              <span className="flex-1 text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>TAREFA</span>
-              {properties.filter(p => visibility[p.id]).map(prop => (
-                <span key={prop.id} className="w-[120px] text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>{prop.label.toUpperCase()}</span>
-              ))}
-              <span className="w-[50px]"></span>
+            <div className="rounded-t-xl overflow-x-auto" style={{ borderTop: '1px solid var(--color-border)', borderLeft: '1px solid var(--color-border)', borderRight: '1px solid var(--color-border)' }}>
+              <div
+                className="flex items-center px-4 py-3 min-w-max"
+                style={{ background: 'var(--color-bg-surface)' }}
+              >
+                <span className="w-[40px] flex-shrink-0"></span>
+                <span className="w-[260px] flex-shrink-0 text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>TAREFA</span>
+                {orderedVisibleProperties.map(prop => (
+                  <span key={prop.id} className="w-[140px] flex-shrink-0 text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>{prop.label.toUpperCase()}</span>
+                ))}
+                <span className="w-[50px] flex-shrink-0"></span>
+              </div>
             </div>
 
-            <div className="rounded-b-xl overflow-hidden" style={{ border: '1px solid var(--color-border)', borderTop: 'none' }}>
-              {pending.map((task, i) => {
-                const { planTitle, milestoneTitle } = resolveContext(task)
-                return (
-                  <TaskItem
-                    key={task.id}
-                    task={task}
-                    properties={properties}
-                    visibility={visibility}
-                    onToggle={onToggle}
-                    onDelete={onDelete}
-                    onOpenModal={onOpenModal}
-                    even={i % 2 === 0}
-                    planTitle={planTitle}
-                    milestoneTitle={milestoneTitle}
-                  />
-                )
-              })}
-              {pending.length === 0 && (
-                <p className="text-center py-12 text-sm" style={{ color: 'var(--color-text-label)' }}>Nenhuma tarefa encontrada.</p>
-              )}
+            <div className="rounded-b-xl overflow-x-auto" style={{ border: '1px solid var(--color-border)', borderTop: 'none' }}>
+              <div className="min-w-max">
+                {pending.map((task, i) => {
+                  const { planTitle, milestoneTitle } = resolveContext(task)
+                  return (
+                    <TaskItem
+                      key={task.id}
+                      task={task}
+                      properties={orderedVisibleProperties}
+                      visibility={visibility}
+                      onToggle={onToggle}
+                      onDelete={onDelete}
+                      onOpenModal={onOpenModal}
+                      even={i % 2 === 0}
+                      planTitle={planTitle}
+                      milestoneTitle={milestoneTitle}
+                    />
+                  )
+                })}
+                {pending.length === 0 && (
+                  <p className="text-center py-12 text-sm" style={{ color: 'var(--color-text-label)' }}>Nenhuma tarefa encontrada.</p>
+                )}
+              </div>
             </div>
           </>
         )}
@@ -375,26 +456,28 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
 
             {showCompleted && (
               <div
-                className="rounded-xl overflow-hidden mt-3"
+                className="rounded-xl overflow-x-auto mt-3"
                 style={{ border: '1px solid var(--color-border)', opacity: 0.6 }}
               >
-                {completed.map((task, i) => {
-                  const { planTitle, milestoneTitle } = resolveContext(task)
-                  return (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      properties={properties}
-                      visibility={visibility}
-                      onToggle={onToggle}
-                      onDelete={onDelete}
-                      onOpenModal={onOpenModal}
-                      even={i % 2 === 0}
-                      planTitle={planTitle}
-                      milestoneTitle={milestoneTitle}
-                    />
-                  )
-                })}
+                <div className="min-w-max">
+                  {completed.map((task, i) => {
+                    const { planTitle, milestoneTitle } = resolveContext(task)
+                    return (
+                      <TaskItem
+                        key={task.id}
+                        task={task}
+                        properties={orderedVisibleProperties}
+                        visibility={visibility}
+                        onToggle={onToggle}
+                        onDelete={onDelete}
+                        onOpenModal={onOpenModal}
+                        even={i % 2 === 0}
+                        planTitle={planTitle}
+                        milestoneTitle={milestoneTitle}
+                      />
+                    )
+                  })}
+                </div>
               </div>
             )}
           </div>
