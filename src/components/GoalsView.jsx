@@ -534,7 +534,7 @@ export default function GoalsView({
               <div className="w-full h-[1px]" style={{ background: 'var(--color-border)' }}></div>
 
               <div className="flex flex-col gap-2">
-                <span className="text-[10px] font-bold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>MILESTONES TRIMESTRAIS</span>
+                <span className="text-[10px] font-bold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>MILESTONES</span>
                 {goalForm.milestones.length > 0 && (
                   <div className="flex flex-col gap-1.5 mb-1">
                     {goalForm.milestones.map(m => (
