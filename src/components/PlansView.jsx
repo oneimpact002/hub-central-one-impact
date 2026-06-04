@@ -794,9 +794,9 @@ function MilestoneSection({ planId, milestone, index, total, tasks, onToggle, on
         <button
           onClick={() => onAddTask(planId, milestone.id)}
           className="flex items-center gap-2 px-2.5 py-2 rounded-md mt-1 transition-colors text-left border-none cursor-pointer"
-          style={{ background: 'var(--color-bg-input)' }}
+          style={{ background: 'var(--color-bg-surface)', border: '1px dashed var(--color-border)' }}
           onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-bg-row-hover)'}
-          onMouseLeave={(e) => e.currentTarget.style.background = 'var(--color-bg-input)'}
+          onMouseLeave={(e) => e.currentTarget.style.background = 'var(--color-bg-surface)'}
         >
           <span className="text-[12px] flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>+</span>
           <span className="text-[12px]" style={{ color: 'var(--color-text-muted)' }}>Nova tarefa...</span>
