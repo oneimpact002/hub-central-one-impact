@@ -361,7 +361,7 @@ function MilestoneSection({ planId, milestone, index, total, tasks, onToggle, on
       {/* Coluna esquerda: número + setas */}
       <div
         className="flex flex-col items-center justify-center gap-1 px-2 flex-shrink-0 cursor-grab active:cursor-grabbing"
-        style={{ borderRight: '1px solid var(--color-border)', minWidth: '32px' }}
+        style={{ borderRight: '1px solid var(--color-border)', minWidth: '32px', opacity: 0.5 }}
         title="Arraste para reordenar"
       >
         <button
