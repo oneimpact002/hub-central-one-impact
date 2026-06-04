@@ -117,6 +117,48 @@ export default function TaskItem({ task, properties, visibility, onToggle, onDel
               </span>
             )
           }
+          if (prop.id === 'client') {
+            return (
+              <span key={prop.id} className="w-[120px] flex-shrink-0 text-[12px]">
+                {val ? (
+                  <span className="text-[11px] truncate" style={{ color: 'var(--color-text-secondary)' }}>{val}</span>
+                ) : <span style={{ color: 'var(--color-text-label)' }}>—</span>}
+              </span>
+            )
+          }
+          if (prop.id === 'status') {
+            const statusMeta = {
+              'para fazer': { label: 'Para fazer', color: '#94a3b8' },
+              'fazendo': { label: 'Fazendo', color: '#3b82f6' },
+              'feito': { label: 'Feito', color: '#10b981' },
+              'precisa de aprovação': { label: 'Aprovação', color: '#a855f7' },
+              'precisa de aprovacao': { label: 'Aprovação', color: '#a855f7' },
+              'aguardando': { label: 'Aguardando', color: '#f59e0b' },
+              'cancelado': { label: 'Cancelado', color: '#6b7280' },
+            }
+            const meta = val ? statusMeta[val.toLowerCase()] : null
+            return (
+              <span key={prop.id} className="w-[120px] flex-shrink-0 text-[12px]">
+                {meta ? (
+                  <span
+                    className="text-[10px] px-1.5 py-0.5 rounded font-semibold"
+                    style={{ background: `${meta.color}22`, color: meta.color }}
+                  >
+                    {meta.label}
+                  </span>
+                ) : <span style={{ color: 'var(--color-text-label)' }}>—</span>}
+              </span>
+            )
+          }
+          if (prop.id === 'comment') {
+            return (
+              <span key={prop.id} className="w-[120px] flex-shrink-0 text-[12px]">
+                {val ? (
+                  <span className="text-[11px] truncate block" style={{ color: 'var(--color-text-secondary)' }} title={val}>{val}</span>
+                ) : <span style={{ color: 'var(--color-text-label)' }}>—</span>}
+              </span>
+            )
+          }
           return null
         })}
 

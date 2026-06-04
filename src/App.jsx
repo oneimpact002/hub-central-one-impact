@@ -14,10 +14,11 @@ const TEAM_MEMBERS = ['Karol', 'Gabi', 'Chris']
 
 const properties = [
   { id: 'priority', label: 'Prioridade', visible: true },
+  { id: 'status', label: 'Status', visible: true },
   { id: 'responsible', label: 'Responsável', visible: true },
+  { id: 'client', label: 'Cliente', visible: true },
   { id: 'executionDate', label: 'Data Execução', visible: true },
   { id: 'dueDate', label: 'Prazo', visible: true },
-  { id: 'tags', label: 'Tags', visible: false },
   { id: 'comment', label: 'Comentários', visible: false },
 ]
 
