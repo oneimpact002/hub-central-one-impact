@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orientações — Dashboard One Impact</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1E1A36;
+      --surface: #2D245D;
+      --surface-2: #352a6e;
+      --accent: #503FB6;
+      --accent-light: #7d6ed1;
+      --text: #ffffff;
+      --text-2: rgba(255,255,255,0.75);
+      --text-3: rgba(255,255,255,0.5);
+      --border: rgba(255,255,255,0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Montserrat', sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 880px; margin: 0 auto; padding: 60px 24px 100px; }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      margin-bottom: 60px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--accent-light);
+      margin-bottom: 16px;
+      padding: 6px 12px;
+      background: rgba(80, 63, 182, 0.15);
+      border: 1px solid rgba(80, 63, 182, 0.3);
+      border-radius: 6px;
+    }
+    .hero h1 {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+    .hero p { color: var(--text-2); font-size: 16px; max-width: 600px; margin: 0 auto; }
+
+    /* Section */
+    section { margin-bottom: 56px; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .section-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    p { color: var(--text-2); margin-bottom: 12px; }
+    ul, ol { color: var(--text-2); margin-left: 24px; margin-bottom: 16px; }
+    li { margin-bottom: 6px; }
+    strong { color: var(--text); font-weight: 600; }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .card-grid .card { margin-bottom: 0; }
+
+    /* Module cards */
+    .module {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .module-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(80, 63, 182, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+    .module-body h3 { font-size: 14px; margin-bottom: 4px; }
+    .module-body p { font-size: 12px; margin: 0; line-height: 1.5; }
+
+    /* Steps */
+    .step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; padding-top: 2px; }
+    .step-body h3 { font-size: 15px; margin-bottom: 4px; }
+    .step-body p { font-size: 13px; margin: 0; }
+
+    /* Quote */
+    .quote {
+      background: var(--surface-2);
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+      font-style: italic;
+      color: var(--text-2);
+      font-size: 14px;
+    }
+
+    /* Tip */
+    .tip {
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(80, 63, 182, 0.1);
+      border: 1px solid rgba(80, 63, 182, 0.25);
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+    .tip-icon { font-size: 18px; flex-shrink: 0; }
+    .tip p { margin: 0; font-size: 13px; color: var(--text-2); }
+    .tip strong { color: var(--accent-light); }
+
+    /* Code/template */
+    .template {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 12px 0;
+      font-family: 'Montserrat', monospace;
+      font-size: 13px;
+      color: var(--text-2);
+    }
+    .template-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--accent-light);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+    th {
+      text-align: left;
+      padding: 10px 12px;
+      background: var(--surface-2);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-3);
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-2);
+    }
+    tr:last-child td { border-bottom: none; }
+
+    /* Cadence */
+    .cadence {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 16px;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .cadence h3 { font-size: 14px; margin: 0; }
+    .cadence p { font-size: 13px; margin: 0; }
+    .cadence-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      background: rgba(80, 63, 182, 0.25);
+      color: var(--accent-light);
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 40px 16px 60px; }
+      .hero h1 { font-size: 32px; }
+      .cadence { grid-template-columns: 1fr; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Hero -->
+    <div class="hero">
+      <span class="hero-eyebrow">GUIA DE USO</span>
+      <h1>Orientações Estratégicas</h1>
+      <p>Como usar o Dashboard One Impact para tirar suas metas do papel — da estratégia à execução.</p>
+    </div>
+
+    <!-- 1. Visão Geral -->
+    <section>
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2>Visão geral do sistema</h2>
+      </div>
+      <p>O dashboard segue uma hierarquia clara. Cada nível alimenta o seguinte, do estratégico ao operacional.</p>
+
+      <div class="card-grid">
+        <div class="module">
+          <div class="module-icon">◆</div>
+          <div class="module-body">
+            <h3>Direcionamentos</h3>
+            <p>Os 3-5 pilares estratégicos que guiam o ano. Tudo nasce daqui.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-icon">◎</div>
+          <div class="module-body">
+            <h3>Metas anuais</h3>
+            <p>Metas SMART vinculadas a um direcionamento. Com métrica e prazo.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-icon">▤</div>
+          <div class="module-body">
+            <h3>Planos de ação</h3>
+            <p>Como a meta será entregue. Com milestones e documentos.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-icon">✓</div>
+          <div class="module-body">
+            <h3>Tarefas</h3>
+            <p>O trabalho do dia a dia. Vinculado a plano ou avulso.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-icon">▦</div>
+          <div class="module-body">
+            <h3>Calendário</h3>
+            <p>Visão temporal. Arraste tarefas para mudar datas.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-icon">▣</div>
+          <div class="module-body">
+            <h3>Início</h3>
+            <p>Painel geral. O que precisa de atenção agora.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="quote">
+        "Estratégia sem execução é alucinação. Execução sem estratégia é trabalho perdido." — aplicada a um dashboard, cada módulo existe porque o anterior existe.
+      </div>
+    </section>
+
+    <!-- 2. Ordem de Criação -->
+    <section>
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2>Ordem de criação</h2>
+      </div>
+      <p>Sempre nessa ordem. Cada passo só faz sentido se o anterior existir.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Defina os direcionamentos</h3>
+          <p>No começo do ano (ou trimestre), crie 3-5 direcionamentos. São áreas amplas como "Crescimento", "Pessoas", "Marca", "Operações".</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Crie metas SMART vinculadas</h3>
+          <p>Cada meta deve responder a um direcionamento. Use a régua SMART e defina métrica, valor atual, valor alvo e prazo.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Quebre em planos de ação</h3>
+          <p>Para cada meta complexa, crie um plano. Defina contexto, datas e milestones (entregas intermediárias com prazo).</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Detalhe em tarefas</h3>
+          <p>Tarefas devem ser acionáveis (verbo no infinitivo). Vincule cada uma a um responsável e a um plano/milestone quando fizer sentido.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Use o calendário para enxergar</h3>
+          <p>Toda terça, abra o calendário e veja a semana. Arraste tarefas para replanejar sem perder a visão do todo.</p>
+        </div>
+      </div>
+
+      <div class="tip">
+        <div class="tip-icon">💡</div>
+        <p><strong>Regra de ouro:</strong> se não está vinculado a um direcionamento, revise. Tarefas órfãs viram ruído.</p>
+      </div>
+    </section>
+
+    <!-- 3. Metodologias -->
+    <section>
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2>Metodologias aplicadas</h2>
+      </div>
+
+      <div class="card">
+        <h3>SMART — para metas</h3>
+        <p>Cada meta deve ser:</p>
+        <ul>
+          <li><strong>S</strong>pecific (Específica) — "fechar 5 clientes enterprise no Q3", não "vender mais"</li>
+          <li><strong>M</strong>easurable (Mensurável) — número concreto, atual e alvo</li>
+          <li><strong>A</strong>chievable (Alcançável) — desafiadora mas possível dado o contexto</li>
+          <li><strong>R</strong>elevant (Relevante) — conectada a um direcionamento ativo</li>
+          <li><strong>T</strong>ime-bound (Temporal) — com trimestre e prazo definidos</li>
+        </ul>
+        <div class="template">
+          <div class="template-title">EXEMPLO DE META SMART</div>
+          "Fechar 5 novos clientes enterprise (acima de R$ 30k/ano) até o fim do Q3 2026, gerando R$ 150k em novos contratos."<br><br>
+          Métrica: clientes fechados — Atual: 0 / Meta: 5
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Milestones — entregas com prazo</h3>
+        <p>Milestones <strong>não são tarefas</strong>. São marcos de progresso que mostram se o plano está no trilho.</p>
+        <ul>
+          <li>Use 3-7 milestones por plano (mais que isso vira lista de tarefas)</li>
+          <li>Cada milestone deve ter data e ser verificável (algo concreto aconteceu)</li>
+          <li>Bons exemplos: "Landing publicada", "Aprovação do cliente", "Campanha no ar", "Onboarding concluído"</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Matriz de Eisenhower — para tarefas</h3>
+        <p>Classifique por urgência e importância antes de priorizar:</p>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Urgente</th>
+              <th>Não urgente</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Importante</strong></td>
+              <td>Faça agora (Q1)</td>
+              <td>Agende (Q2 / Q3)</td>
+            </tr>
+            <tr>
+              <td><strong>Não importante</strong></td>
+              <td>Delegue</td>
+              <td>Elimine</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top:12px"><strong>No dashboard:</strong> use a prioridade "Alta" para o quadrante 1, "Média" para o 2, e "Qualquer momento" para os quadrantes 3 e 4.</p>
+      </div>
+
+      <div class="card">
+        <h3>GTD (Getting Things Done) — captura e clareza</h3>
+        <p>Para cada tarefa, passe por 5 estágios:</p>
+        <ol>
+          <li><strong>Capturar</strong> — anote tudo que vier à cabeça (não confie na memória)</li>
+          <li><strong>Clarificar</strong> — o que é isso? É acionável?</li>
+          <li><strong>Organizar</strong> — se for tarefa, defina responsável e data</li>
+          <li><strong>Refletir</strong> — revise a lista (reuniões semanais)</li>
+          <li><strong>Engajar</strong> — execute com foco</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 4. Gestão do Tempo -->
+    <section>
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2>Gestão do tempo</h2>
+      </div>
+
+      <div class="card">
+        <h3>Time blocking — reserve blocos, não listas</h3>
+        <p>Não adianta ter 30 tarefas se você não tem tempo para executá-las. Para cada prioridade "Alta", defina:</p>
+        <ul>
+          <li><strong>Data de execução</strong> — quando vai fazer (no calendário)</li>
+          <li><strong>Prazo</strong> — quando precisa estar pronto (data limite)</li>
+        </ul>
+        <p>Se a diferença entre as duas é pequena, o trabalho está bem orçado. Se a data de execução está depois do prazo, é sinal de alerta.</p>
+      </div>
+
+      <div class="card">
+        <h3>Regra 1-3-5</h3>
+        <p>Por dia, escolha:</p>
+        <ul>
+          <li><strong>1</strong> tarefa grande (a "vitória do dia")</li>
+          <li><strong>3</strong> tarefas médias</li>
+          <li><strong>5</strong> tarefas pequenas (se sobrar tempo)</li>
+        </ul>
+        <p>Isso evita o erro clássico de fazer 10 coisas pequenas e nenhuma das importantes.</p>
+      </div>
+    </section>
+
+    <!-- 5. Cadência de Revisão -->
+    <section>
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2>Quando revisar</h2>
+      </div>
+      <p>A revisão é o que transforma um dashboard de "lista bonita" em ferramenta de gestão. Sem ela, é só decoração.</p>
+
+      <div class="cadence">
+        <div>
+          <h3>Diária</h3>
+          <span class="cadence-badge">5 MIN</span>
+        </div>
+        <div>
+          <p>Olhe o painel Início. Veja tarefas atrasadas e do dia. Ajuste o que precisa.</p>
+        </div>
+      </div>
+
+      <div class="cadence">
+        <div>
+          <h3>Semanal</h3>
+          <span class="cadence-badge">30-60 MIN · TERÇA</span>
+        </div>
+        <div>
+          <p>Reunião de planejamento semanal com a equipe. Revisar: tarefas concluídas, pendências, prioridades da próxima semana. Use o calendário para visualizar.</p>
+        </div>
+      </div>
+
+      <div class="cadence">
+        <div>
+          <h3>Mensal</h3>
+          <span class="cadence-badge">1-2H · ÚLTIMO DIA ÚTIL</span>
+        </div>
+        <div>
+          <p>Revisão do mês. Atualize o progresso das metas (currentValue). Veja planos atrasados. Decida o que continua, pausa ou é abandonado.</p>
+        </div>
+      </div>
+
+      <div class="cadence">
+        <div>
+          <h3>Trimestral</h3>
+          <span class="cadence-badge">4H · FIM DO TRIMESTRE</span>
+        </div>
+        <div>
+          <p>Revisão estratégica. Olhe cada meta: está no trilho? Os direcionamentos ainda fazem sentido? Defina metas do próximo trimestre ou ajuste as atuais.</p>
+        </div>
+      </div>
+
+      <div class="cadence">
+        <div>
+          <h3>Anual</h3>
+          <span class="cadence-badge">1 DIA · DEZEMBRO</span>
+        </div>
+        <div>
+          <p>Planejamento do próximo ano. Defina os direcionamentos do ano, depois metas por trimestre. Revise aprendizados do ano que passou.</p>
+        </div>
+      </div>
+
+      <div class="tip">
+        <div class="tip-icon">⚠️</div>
+        <p><strong>Atenção:</strong> se a reunião semanal vira só "status report", revise o formato. O objetivo é destravar e replanejar, não prestar contas.</p>
+      </div>
+    </section>
+
+    <!-- 6. Templates Prontos -->
+    <section>
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2>Templates prontos</h2>
+      </div>
+
+      <div class="template">
+        <div class="template-title">DIRECIONAMENTO</div>
+        <strong>Título:</strong> [Área estratégica, ex: "Crescimento & Receita"]<br>
+        <strong>Descrição:</strong> [Por que essa área é prioridade neste ano]<br>
+        <strong>Cor:</strong> [Escolha uma cor que represente — vai aparecer em todas as metas vinculadas]
+      </div>
+
+      <div class="template">
+        <div class="template-title">META ANUAL (SMART)</div>
+        <strong>Título:</strong> [Verbo + objeto + número, ex: "Fechar 5 clientes enterprise"]<br>
+        <strong>Direcionamento:</strong> [Vincular]<br>
+        <strong>Tipo:</strong> [Resultado / Hábito / Projeto]<br>
+        <strong>Trimestre:</strong> [Q1 / Q2 / Q3 / Q4]<br>
+        <strong>Métrica:</strong> [Nome da métrica, ex: "Clientes fechados"]<br>
+        <strong>Atual:</strong> 0 · <strong>Meta:</strong> 5<br>
+        <strong>Prazo:</strong> [Data limite]<br>
+        <strong>Milestones:</strong> [3-5 entregas trimestrais verificáveis]
+      </div>
+
+      <div class="template">
+        <div class="template-title">PLANO DE AÇÃO</div>
+        <strong>Título:</strong> [Nome do plano, ex: "Lançamento produto X"]<br>
+        <strong>Contexto:</strong> [Por que esse plano existe, problema que resolve]<br>
+        <strong>Período:</strong> [Data início → Data fim]<br>
+        <strong>Status:</strong> [Ativo / Pausado / Concluído]<br>
+        <strong>Milestones:</strong> [3-7 entregas intermediárias com data]<br>
+        <strong>Documentos:</strong> [Links de Notion, Figma, Google Docs, briefs]
+      </div>
+
+      <div class="template">
+        <div class="template-title">TAREFA</div>
+        <strong>Título:</strong> [Verbo no infinitivo + objeto, ex: "Revisar contrato com cliente Y"]<br>
+        <strong>Plano / Milestone:</strong> [Vincular se aplicável]<br>
+        <strong>Responsável:</strong> [Uma pessoa, não um time]<br>
+        <strong>Prioridade:</strong> [Alta / Média / Qualquer momento]<br>
+        <strong>Data de execução:</strong> [Quando vou fazer]<br>
+        <strong>Prazo:</strong> [Quando precisa estar pronto]<br>
+        <strong>Status:</strong> [Pendente / Em progresso / Concluído]
+      </div>
+    </section>
+
+    <!-- 7. Anti-padrões -->
+    <section>
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2>Erros comuns (evite)</h2>
+      </div>
+
+      <div class="card">
+        <h3>❌ Metas vagas</h3>
+        <p>"Melhorar o atendimento", "Aumentar engajamento". Sem número, sem prazo, é só desejo.</p>
+      </div>
+
+      <div class="card">
+        <h3>❌ Tarefas sem dono</h3>
+        <p>Se todo mundo é responsável, ninguém é. Sempre uma pessoa nomeada.</p>
+      </div>
+
+      <div class="card">
+        <h3>❌ Milestones demais</h3>
+        <p>Plano com 15 milestones é projeto disfarçado. Use 3-7. Se precisar de mais, quebre em planos separados.</p>
+      </div>
+
+      <div class="card">
+        <h3>❌ Tudo é prioridade alta</h3>
+        <p>Se tudo é urgente, nada é. Limite-se a 2-3 prioridades altas por semana por pessoa.</p>
+      </div>
+
+      <div class="card">
+        <h3>❌ Criar tarefa e nunca revisar</h3>
+        <p>Dashboard parado vira cemitério. A revisão semanal é o que mantém vivo.</p>
+      </div>
+
+      <div class="card">
+        <h3>❌ Sem direcionamentos ativos</h3>
+        <p>Se você não tem direcionamentos, está só gerenciando tarefas. Volte e defina os pilares primeiro.</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <div style="text-align:center; padding-top:40px; border-top:1px solid var(--border); color:var(--text-3); font-size:12px;">
+      <p>Dashboard One Impact · Hub Central</p>
+      <p style="margin-top:4px;">Última atualização: 2026</p>
+    </div>
+
+  </div>
+</body>
+</html>

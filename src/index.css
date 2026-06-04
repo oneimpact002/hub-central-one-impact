@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme {
+  /* ═══ DARK MODE (default) ═══ */
+  /* ─── Fundos ─── */
+  --color-bg-main:        #1A1821;
+  --color-bg-surface:     #272431;
+  --color-bg-sidebar:     #2D255A;
+  --color-bg-input:       #503FB6;
+  --color-bg-row-hover:   #503FB6;
+  --color-bg-active:      #2a2a2a;
+  --color-sep:            #1a1a1a;
+
+  /* ─── Bordas ─── */
+  --color-border:         #6A6775;
+  --color-border-input:   #6A6775;
+
+  /* ─── Textos ─── */
+  --color-text-primary:   #ffffff;
+  --color-text-secondary: #ffffff;
+  --color-text-muted:     #7B7582;
+  --color-text-label:     #7B7582;
+
+  /* ─── Botões e acentos ─── */
+  --color-button-cta:      #ffffff;
+  --color-button-cta-text: #0a0a0a;
+  --color-accent:          #ffffff;
+
+  /* ─── Sombra ─── */
+  --color-shadow:          rgba(0,0,0,0.5);
+}
+
+[data-theme="light"] {
+  /* ═══ LIGHT MODE ═══ */
+  /* ─── Fundos ─── */
+  --color-bg-main:        #eaeaf3;   /* Fundo principal da aplicação */
+  --color-bg-surface:     #fafafa;   /* Superfície de cartões e blocos */
+  --color-bg-sidebar:     #2D255A;   /* Cor base da sidebar (usada pelo gradient) */
+  --color-bg-input:       #ffffff;   /* Fundo de inputs e toggles */
+  --color-bg-row-hover:   #f0f0f0;   /* Linha da lista ao passar o mouse */
+  --color-bg-active:      #e8e8e8;   /* Item ativo (abas, etc) */
+  --color-sep:            #ffffff;   /* Separadores */
+
+  /* ─── Bordas ─── */
+  --color-border:         #e5e5e5;   /* Bordas gerais (cards, divisores) */
+  --color-border-input:   #d4d4d4;   /* Bordas de inputs */
+
+  /* ─── Textos ─── */
+  --color-text-primary:   #503FB6;   /* Texto principal */
+  --color-text-secondary: #503FB6;   /* Texto secundário */
+  --color-text-muted:     #503FB6;   /* Texto esmaecido */
+  --color-text-label:     #503FB6;   /* Labels de seção */
+
+  /* ─── Botões e acentos ─── */
+  --color-button-cta:        #0a0a0a;  /* Fundo do botão principal */
+  --color-button-cta-text:   #ffffff;  /* Texto do botão principal */
+  --color-accent:            #503FB6;  /* Cor de destaque */
+
+  /* ─── Sombra ─── */
+  --color-shadow:         rgba(0,0,0,0.1);
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg-main);
+  font-family: 'Montserrat', sans-serif;
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg-surface); }
+::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 3px; }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: #cccccc; }
+
+select, input[type="date"], input[type="text"], input[type="number"], textarea {
+  background: var(--color-bg-input);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-input);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  outline: none;
+  font-family: 'Montserrat', sans-serif;
+  color-scheme: dark;
+}
+[data-theme="light"] select, [data-theme="light"] input[type="date"], [data-theme="light"] input[type="text"], [data-theme="light"] input[type="number"], [data-theme="light"] textarea {
+  color-scheme: light;
+}
+select:focus, input:focus, textarea:focus { border-color: var(--color-text-muted); }
+
+* { box-sizing: border-box; }
+
+/* Sidebar sempre com texto branco (fundo roxo escuro em ambos os temas) */
+aside {
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.75);
+  --color-text-muted: rgba(255, 255, 255, 0.5);
+  --color-text-label: rgba(255, 255, 255, 0.4);
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-bg-input: rgba(255, 255, 255, 0.1);
+  --color-bg-active: rgba(255, 255, 255, 0.15);
+}
+
+/* Calendário: barra do toggle em #272431 e textos brancos */
+.calendar-view {
+  --color-bg-input: #272431;
+  --color-bg-active: #272431;
+  --color-text-muted: #ffffff;
+  --color-text-secondary: #ffffff;
+  --color-border: #272431;
+  --color-border-input: #272431;
+}
