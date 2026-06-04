@@ -3,6 +3,8 @@ import TaskItem from './TaskItem'
 
 const TaskColWidthContext = createContext(480)
 export const useTaskColWidth = () => useContext(TaskColWidthContext)
+const PropColWidthsContext = createContext({})
+export const usePropColWidths = () => useContext(PropColWidthsContext)
 
 const priorityOrder = { hoje: 0, 'essa-semana': 1, 'proxima-semana': 2, 'qualquer-momento': 3 }
 const priorityLabels = { hoje: 'Hoje', 'essa-semana': 'Esta Semana', 'proxima-semana': 'Próxima Semana', 'qualquer-momento': 'Qualquer Momento' }
@@ -26,6 +28,13 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
     const saved = localStorage.getItem('taskColWidth')
     const n = saved ? Number(saved) : 480
     return n >= 200 && n <= 1200 ? n : 480
+  })
+  const [propColWidths, setPropColWidths] = useState(() => {
+    const saved = localStorage.getItem('propColWidths')
+    if (saved) {
+      try { return JSON.parse(saved) } catch { /* ignore */ }
+    }
+    return {}
   })
   const [visibility, setVisibility] = useState(() => {
     const saved = localStorage.getItem('taskColumns')
@@ -52,19 +61,28 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
     localStorage.setItem('taskColWidth', String(taskColWidth))
   }, [taskColWidth])
 
-  // Resize handle para a coluna TAREFA
-  const resizeState = useRef({ active: false, startX: 0, startW: 0 })
-  const onResizeMouseDown = (e) => {
-    resizeState.current = { active: true, startX: e.clientX, startW: taskColWidth }
+  useEffect(() => {
+    localStorage.setItem('propColWidths', JSON.stringify(propColWidths))
+  }, [propColWidths])
+
+  // Resize handle para qualquer coluna
+  const resizeState = useRef({ active: false, colId: null, startX: 0, startW: 0 })
+  const onResizeMouseDown = (e, colId, currentWidth) => {
+    resizeState.current = { active: true, colId, startX: e.clientX, startW: currentWidth }
     e.preventDefault()
     e.stopPropagation()
   }
   useEffect(() => {
     const onMove = (e) => {
       if (!resizeState.current.active) return
-      const dx = e.clientX - resizeState.current.startX
-      const next = Math.min(1200, Math.max(200, resizeState.current.startW + dx))
-      setTaskColWidth(next)
+      const { colId, startX, startW } = resizeState.current
+      const dx = e.clientX - startX
+      const next = Math.min(600, Math.max(60, startW + dx))
+      if (colId === '__task__') {
+        setTaskColWidth(next)
+      } else {
+        setPropColWidths(prev => ({ ...prev, [colId]: next }))
+      }
     }
     const onUp = () => { resizeState.current.active = false }
     document.addEventListener('mousemove', onMove)
@@ -175,6 +193,7 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
 
   return (
     <TaskColWidthContext.Provider value={taskColWidth}>
+    <PropColWidthsContext.Provider value={propColWidths}>
     <div className="flex flex-col flex-1 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-8 py-5" style={{ borderBottom: '1px solid var(--color-border)' }}>
@@ -409,15 +428,30 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                       >
                         TAREFA
                         <span
-                          onMouseDown={onResizeMouseDown}
+                          onMouseDown={(e) => onResizeMouseDown(e, '__task__', taskColWidth)}
                           className="absolute top-0 right-0 h-full cursor-col-resize"
                           style={{ width: '6px', marginRight: '-3px', zIndex: 5 }}
                           title="Arraste para ajustar a largura"
                         />
                       </span>
-                      {orderedVisibleProperties.map(prop => (
-                        <span key={prop.id} className="w-[140px] flex-shrink-0 text-[10px] font-semibold tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{prop.label.toUpperCase()}</span>
-                      ))}
+                      {orderedVisibleProperties.map(prop => {
+                        const w = propColWidths[prop.id] || 120
+                        return (
+                          <span
+                            key={prop.id}
+                            className="flex-shrink-0 text-[10px] font-semibold tracking-wider pr-4 relative"
+                            style={{ color: 'var(--color-text-muted)', width: `${w}px` }}
+                          >
+                            {prop.label.toUpperCase()}
+                            <span
+                              onMouseDown={(e) => onResizeMouseDown(e, prop.id, w)}
+                              className="absolute top-0 right-0 h-full cursor-col-resize"
+                              style={{ width: '6px', marginRight: '-3px', zIndex: 5 }}
+                              title="Arraste para ajustar a largura"
+                            />
+                          </span>
+                        )
+                      })}
                       <span className="w-[50px] flex-shrink-0"></span>
                     </div>
                     {taskList.map((task, i) => {
@@ -460,17 +494,31 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
                     style={{ color: 'var(--color-text-primary)', width: `${taskColWidth}px` }}
                   >
                     TAREFA
-                    {/* Handle de resize */}
                     <span
-                      onMouseDown={onResizeMouseDown}
+                      onMouseDown={(e) => onResizeMouseDown(e, '__task__', taskColWidth)}
                       className="absolute top-0 right-0 h-full cursor-col-resize"
                       style={{ width: '6px', marginRight: '-3px', zIndex: 5 }}
                       title="Arraste para ajustar a largura"
                     />
                   </span>
-                  {orderedVisibleProperties.map(prop => (
-                    <span key={prop.id} className="w-[120px] flex-shrink-0 text-[11px] font-semibold tracking-wider" style={{ color: 'var(--color-text-primary)' }}>{prop.label.toUpperCase()}</span>
-                  ))}
+                  {orderedVisibleProperties.map(prop => {
+                    const w = propColWidths[prop.id] || 120
+                    return (
+                      <span
+                        key={prop.id}
+                        className="flex-shrink-0 text-[11px] font-semibold tracking-wider pr-4 relative"
+                        style={{ color: 'var(--color-text-primary)', width: `${w}px` }}
+                      >
+                        {prop.label.toUpperCase()}
+                        <span
+                          onMouseDown={(e) => onResizeMouseDown(e, prop.id, w)}
+                          className="absolute top-0 right-0 h-full cursor-col-resize"
+                          style={{ width: '6px', marginRight: '-3px', zIndex: 5 }}
+                          title="Arraste para ajustar a largura"
+                        />
+                      </span>
+                    )
+                  })}
                   <span className="w-[50px] flex-shrink-0"></span>
                 </div>
 
@@ -541,6 +589,7 @@ export default function TaskList({ tasks, properties, plans, teamMembers, onTogg
         )}
       </div>
     </div>
+    </PropColWidthsContext.Provider>
     </TaskColWidthContext.Provider>
   )
 }
