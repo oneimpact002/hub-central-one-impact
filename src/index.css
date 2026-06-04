@@ -26,6 +26,10 @@
   --color-button-cta-text: #0a0a0a;
   --color-accent:          #ffffff;
 
+  /* ─── Linhas de tabela ─── */
+  --color-task-row:        #272431;
+  --color-task-row-hover:  #3a3548;
+
   /* ─── Sombra ─── */
   --color-shadow:          rgba(0,0,0,0.5);
 }
@@ -55,6 +59,10 @@
   --color-button-cta:        #0a0a0a;  /* Fundo do botão principal */
   --color-button-cta-text:   #ffffff;  /* Texto do botão principal */
   --color-accent:            #503FB6;  /* Cor de destaque */
+
+  /* ─── Linhas de tabela ─── */
+  --color-task-row:        #FAFAFA;
+  --color-task-row-hover:  #f0f0f0;
 
   /* ─── Sombra ─── */
   --color-shadow:         rgba(0,0,0,0.1);
