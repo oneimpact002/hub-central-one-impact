@@ -250,7 +250,7 @@ function MilestoneTaskItem({ task, index, total, onToggle, onReorderTasks, onDel
       >
         <button
           onClick={(e) => { e.stopPropagation(); onToggle() }}
-          className="w-[14px] h-[14px] rounded-full border-[1.5px] flex-shrink-0 cursor-pointer flex items-center justify-center transition-all mt-0.5"
+          className="w-[14px] h-[14px] rounded-full border-[1.5px] flex-shrink-0 cursor-pointer flex items-center justify-center transition-all"
           style={{
             background: task.completed ? 'var(--color-text-secondary)' : 'transparent',
             borderColor: task.completed ? 'var(--color-text-secondary)' : '#555555',
@@ -434,14 +434,14 @@ function MilestoneTaskItem({ task, index, total, onToggle, onReorderTasks, onDel
 
       {/* Conteúdo da tarefa */}
       <div
-        className="flex-1 flex items-start gap-2.5 px-2.5 py-2 cursor-pointer min-w-0"
+        className="flex-1 flex items-center gap-2.5 px-2.5 py-2 cursor-pointer min-w-0"
         onMouseEnter={(e) => e.currentTarget.parentElement.style.background = 'var(--color-bg-row-hover)'}
         onMouseLeave={(e) => e.currentTarget.parentElement.style.background = 'var(--color-bg-surface)'}
         onClick={onOpen}
       >
         <button
           onClick={(e) => { e.stopPropagation(); onToggle() }}
-          className="w-[14px] h-[14px] rounded-full border-[1.5px] flex-shrink-0 cursor-pointer flex items-center justify-center transition-all mt-0.5"
+          className="w-[14px] h-[14px] rounded-full border-[1.5px] flex-shrink-0 cursor-pointer flex items-center justify-center transition-all"
           style={{
             background: task.completed ? 'var(--color-text-secondary)' : 'transparent',
             borderColor: task.completed ? 'var(--color-text-secondary)' : '#555555',
@@ -675,7 +675,7 @@ function MilestoneSection({ planId, milestone, index, total, tasks, onToggle, on
               className="text-[11px] cursor-pointer rounded px-2 py-1 border-none"
               style={{ background: 'var(--color-bg-input)', color: 'var(--color-text-muted)' }}
             >
-              ✕
+              Cancelar
             </button>
           </div>
         ) : (
