@@ -263,18 +263,20 @@ function MilestoneTaskItem({ task, index, total, onToggle, onReorderTasks, onDel
           )}
         </button>
 
-        <div className="flex-1 flex flex-col gap-1.5 min-w-0">
+        <div className="flex-1 flex flex-col gap-1.5 min-w-0 justify-center">
           <span
             className="text-[12px] truncate"
             style={{
               color: task.completed ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
               textDecoration: task.completed ? 'line-through' : 'none',
+              lineHeight: '1.3',
+              display: 'block',
             }}
           >
             {task.title}
           </span>
 
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap" style={{ lineHeight: '1.3' }}>
             {task.responsible && (
               <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
                 <span style={{ fontWeight: 600 }}>Responsável:</span>
@@ -454,18 +456,20 @@ function MilestoneTaskItem({ task, index, total, onToggle, onReorderTasks, onDel
           )}
         </button>
 
-        <div className="flex-1 flex flex-col gap-1.5 min-w-0">
+        <div className="flex-1 flex flex-col gap-1.5 min-w-0 justify-center">
           <span
             className="text-[12px] truncate"
             style={{
               color: task.completed ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
               textDecoration: task.completed ? 'line-through' : 'none',
+              lineHeight: '1.3',
+              display: 'block',
             }}
           >
             {task.title}
           </span>
 
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap" style={{ lineHeight: '1.3' }}>
             {task.responsible && (
               <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
                 <span style={{ fontWeight: 600 }}>Responsável:</span>
